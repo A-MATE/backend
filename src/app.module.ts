@@ -5,6 +5,10 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 
+import { OrganisationsModule } from './organisations/organisations.module';
+import { Role } from './roles/entities/role.entity';
+import { RolesModule } from './roles/roles.module';
+import { TeamsModule } from './teams/teams.module';
 import { UsersModule } from './users/users.module';
 
 @Module({
@@ -24,12 +28,17 @@ import { UsersModule } from './users/users.module';
         username: configService.get('DATABASE_USER'),
         password: configService.get('DATABASE_PASSWORD'),
         database: configService.get('DATABASE_NAME'),
-        entities: [],
-        synchronize: configService.get('NODE_ENV') === 'development',
+        entities: [Role],
+        synchronize: ['development', 'local'].includes(
+          configService.get('NODE_ENV'),
+        ),
       }),
     }),
     UsersModule,
     AuthModule,
+    OrganisationsModule,
+    TeamsModule,
+    RolesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
