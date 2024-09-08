@@ -4,10 +4,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
-
-import { OrganisationsModule } from './organisations/organisations.module';
+import { MatchesModule } from './matches/matches.module';
+import { OrganizationsModule } from './organizations/organizations.module';
+import { PlayersModule } from './players/players.module';
 import { Role } from './roles/entities/role.entity';
 import { RolesModule } from './roles/roles.module';
+import { SponsorsModule } from './sponsors/sponsors.module';
+import { StaffMembersModule } from './staff-members/staff-members.module';
+import { Team } from './teams/entities/team.entity';
 import { TeamsModule } from './teams/teams.module';
 import { UserTeamRole } from './user-team-roles/entities/user-team-role';
 import { UserTeamRolesModule } from './user-team-roles/user-team-roles.module';
@@ -30,7 +34,7 @@ import { UsersModule } from './users/users.module';
         username: configService.get('DATABASE_USER'),
         password: configService.get('DATABASE_PASSWORD'),
         database: configService.get('DATABASE_NAME'),
-        entities: [Role, UserTeamRole],
+        entities: [Role, UserTeamRole, Team],
         synchronize: ['development', 'local'].includes(
           configService.get('NODE_ENV'),
         ),
@@ -38,10 +42,14 @@ import { UsersModule } from './users/users.module';
     }),
     UsersModule,
     AuthModule,
-    OrganisationsModule,
     TeamsModule,
     RolesModule,
     UserTeamRolesModule,
+    PlayersModule,
+    MatchesModule,
+    StaffMembersModule,
+    SponsorsModule,
+    OrganizationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
