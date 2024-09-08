@@ -13,8 +13,17 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { CreateRoleDto } from '../dtos/create-role.dto';
-import { Role } from '../entities/role.entity';
+
+import { DeleteOperationResponseDto } from 'src/common/dtos/delete-operation-response.dto';
+import {
+  CreateRoleRequestDto,
+  CreateRoleResponseDto,
+} from '../dtos/create-role.dto';
+import { GetAllRolesResponseDto } from '../dtos/get-all-roles.dto';
+import {
+  UpdateRoleRequestDto,
+  UpdateRoleResponseDto,
+} from '../dtos/update-role.dto';
 import { RolesService } from '../services/roles.service';
 
 @Controller('roles')
@@ -28,9 +37,11 @@ export class RolesController {
     status: 200,
     description:
       'This endpoint creates a new role that can further be assignable to some user',
-    type: String,
+    type: CreateRoleResponseDto,
   })
-  async createNewRole(@Body() body: CreateRoleDto): Promise<Role> {
+  async createNewRole(
+    @Body() body: CreateRoleRequestDto,
+  ): Promise<CreateRoleResponseDto> {
     const { role, description } = body;
     return this.rolesService.createRole(role, description);
   }
@@ -40,43 +51,37 @@ export class RolesController {
   @ApiResponse({
     status: 200,
     description: 'This endpoint returns all roles',
-    type: [Object],
+    type: [GetAllRolesResponseDto],
   })
-  async getAllRoles(): Promise<Role[]> {
+  async getAllRoles(): Promise<GetAllRolesResponseDto[]> {
     return this.rolesService.getAllRoles();
   }
 
-  @Patch(':id')
+  @Patch(':roleId')
   @ApiOperation({ summary: 'Update a role' })
   @ApiResponse({
     status: 200,
     description: 'This endpoint updates a role given its ID',
-    type: String,
+    type: UpdateRoleResponseDto,
   })
   async updateRoleById(
-    @Param('id') id: string,
-    @Body() Body: CreateRoleDto,
-  ): Promise<Role> {
-    const roleId = parseInt(id, 10);
+    @Param('roleId') roleId: string,
+    @Body() Body: UpdateRoleRequestDto,
+  ): Promise<UpdateRoleResponseDto> {
     const { role, description } = Body;
-    if (isNaN(roleId)) {
-      throw new Error('Invalid ID format');
-    }
-    return this.rolesService.updateRoleById(roleId, role, description);
+    return this.rolesService.updateRoleById(+roleId, role, description);
   }
 
-  @Delete(':id')
+  @Delete(':roleId')
   @ApiOperation({ summary: 'Delete a role' })
   @ApiResponse({
     status: 200,
     description: 'This endpoint deletes a role given its ID',
-    type: String,
+    type: DeleteOperationResponseDto,
   })
-  async deleteRoleById(@Param('id') id: string): Promise<string> {
-    const roleId = parseInt(id, 10);
-    if (isNaN(roleId)) {
-      throw new Error('Invalid ID format');
-    }
-    return this.rolesService.deleteRoleById(roleId);
+  async deleteRoleById(
+    @Param('roleId') roleId: string,
+  ): Promise<DeleteOperationResponseDto> {
+    return this.rolesService.deleteRoleById(+roleId);
   }
 }

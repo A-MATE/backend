@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { DeleteResult } from 'typeorm';
 import { Role } from '../entities/role.entity';
 import { RolesRepository } from '../repositories/role.repository';
 
@@ -22,8 +23,7 @@ export class RolesService {
     return await this.rolesRepository.updateRole(id, role, description);
   }
 
-  async deleteRoleById(id: number): Promise<string> {
-    await this.rolesRepository.deleteRole(id);
-    return 'Role deleted successfully';
+  async deleteRoleById(id: number): Promise<DeleteResult> {
+    return await this.rolesRepository.deleteRole(id);
   }
 }

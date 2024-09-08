@@ -9,6 +9,8 @@ import { OrganisationsModule } from './organisations/organisations.module';
 import { Role } from './roles/entities/role.entity';
 import { RolesModule } from './roles/roles.module';
 import { TeamsModule } from './teams/teams.module';
+import { UserTeamRole } from './user-team-roles/entities/user-team-role';
+import { UserTeamRolesModule } from './user-team-roles/user-team-roles.module';
 import { UsersModule } from './users/users.module';
 
 @Module({
@@ -28,7 +30,7 @@ import { UsersModule } from './users/users.module';
         username: configService.get('DATABASE_USER'),
         password: configService.get('DATABASE_PASSWORD'),
         database: configService.get('DATABASE_NAME'),
-        entities: [Role],
+        entities: [Role, UserTeamRole],
         synchronize: ['development', 'local'].includes(
           configService.get('NODE_ENV'),
         ),
@@ -39,6 +41,7 @@ import { UsersModule } from './users/users.module';
     OrganisationsModule,
     TeamsModule,
     RolesModule,
+    UserTeamRolesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
