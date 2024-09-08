@@ -17,7 +17,6 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
     let message: string | Record<string, any> = 'Internal server error';
-
     if (exception instanceof QueryFailedError) {
       status = HttpStatus.BAD_REQUEST;
 

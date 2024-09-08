@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
+import { RoleEnum } from '../@types/roles.types';
 import { Role } from '../entities/role.entity';
 
 @Injectable()
@@ -11,7 +12,10 @@ export class RolesRepository {
   ) {}
 
   async createRole(name: string, description?: string): Promise<Role> {
-    const newRole = this.repository.create({ name, description });
+    const newRole = this.repository.create({
+      name: RoleEnum[name],
+      description,
+    });
     return this.repository.save(newRole);
   }
 
@@ -33,7 +37,7 @@ export class RolesRepository {
       throw new NotFoundException(`Role with ID ${id} not found`);
     }
     if (name) {
-      role.name = name;
+      role.name = RoleEnum[name];
     }
     if (description) {
       role.description = description;
@@ -41,7 +45,7 @@ export class RolesRepository {
     return this.repository.save(role);
   }
 
-  async deleteRole(id: number): Promise<void> {
-    await this.repository.delete(id);
+  async deleteRole(id: number): Promise<DeleteResult> {
+    return await this.repository.delete(id);
   }
 }
