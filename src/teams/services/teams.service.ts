@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { DeleteResult } from 'typeorm';
 import { TeamAgeCategory } from '../@types/team-age-category.types';
 import { TeamGender } from '../@types/team-gender.types';
 import { CreateTeamResponseDto } from '../dtos/create-team.dto';
@@ -42,10 +43,20 @@ export class TeamsService {
       gender,
     );
   }
-  async getAllTeams(): Promise<GetAllTeamsResponseDto[]> {
-    return await this.teamsRepository.getAllTeams();
+  async getAllTeams(
+    withSoftDeleted: boolean = false,
+  ): Promise<GetAllTeamsResponseDto[]> {
+    return await this.teamsRepository.getAllTeams(withSoftDeleted);
   }
-  async getTeamById(id: number) {}
-  async deleteTeamById(id: number) {}
-  async softDeleteTeamById(id: number) {}
+
+  async getTeamById(id: number) {
+    return await this.teamsRepository.getTeamById(id);
+  }
+
+  async hardDeleteTeamById(id: number): Promise<DeleteResult> {
+    return await this.teamsRepository.hardDeleteTeamById(id);
+  }
+  async softDeleteTeamById(id: number): Promise<DeleteResult> {
+    return await this.teamsRepository.softDeleteTeamById(id);
+  }
 }
