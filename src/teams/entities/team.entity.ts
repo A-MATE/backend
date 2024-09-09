@@ -1,4 +1,9 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  DeleteDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { TeamAgeCategory } from '../@types/team-age-category.types';
 import { TeamGender } from '../@types/team-gender.types';
 
@@ -21,4 +26,7 @@ export class Team {
 
   @Column({ nullable: true })
   gender: TeamGender;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 }

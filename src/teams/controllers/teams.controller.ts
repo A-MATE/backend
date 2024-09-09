@@ -4,8 +4,10 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -19,6 +21,7 @@ import {
   CreateTeamResponseDto,
 } from '../dtos/create-team.dto';
 import { GetAllTeamsResponseDto } from '../dtos/get-all-teams.dto';
+import { GetTeamByIdResponseDto } from '../dtos/get-one-team.dto';
 import {
   UpdateTeamRequestDto,
   UpdateTeamResponseDto,
@@ -51,6 +54,33 @@ export class TeamsController {
     );
   }
 
+  @Get()
+  @ApiOperation({ summary: 'Get all teams' })
+  @ApiResponse({
+    status: 200,
+    description: 'This endpoint returns all teams',
+    type: [GetAllTeamsResponseDto],
+  })
+  async getAllTeams(
+    @Query('withSoftDeleted') withSoftDeleted?: boolean,
+  ): Promise<GetAllTeamsResponseDto[]> {
+    // TODO we should keep in my that we eventually need to implement pagination, query parameters, and filtering such as by age, by gender, etc.
+    return await this.teamsService.getAllTeams(withSoftDeleted);
+  }
+
+  @Get(':teamId')
+  @ApiOperation({ summary: 'Get a team by ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'This endpoint returns a team by ID',
+    type: GetTeamByIdResponseDto,
+  })
+  async getTeamById(
+    @Param('teamId', ParseIntPipe) teamId: number,
+  ): Promise<UpdateTeamResponseDto> {
+    return await this.teamsService.getTeamById(teamId);
+  }
+
   @Patch(':teamId')
   @ApiOperation({ summary: 'Update a team' })
   @ApiResponse({
@@ -60,11 +90,11 @@ export class TeamsController {
   })
   async updateTeam(
     @Body() body: UpdateTeamRequestDto,
-    @Param('teamId') teamId: number,
+    @Param('teamId', ParseIntPipe) teamId: number,
   ): Promise<UpdateTeamResponseDto> {
     const { name, description, logos, ageGroup, gender } = body;
     return this.teamsService.updateTeam(
-      +teamId,
+      teamId,
       name,
       description,
       logos,
@@ -73,32 +103,22 @@ export class TeamsController {
     );
   }
 
-  @Get()
-  @ApiOperation({ summary: 'Get all teams' })
-  @ApiResponse({
-    status: 200,
-    description: 'This endpoint returns all teams',
-    type: [GetAllTeamsResponseDto],
-  })
-  async getAllTeams(): Promise<GetAllTeamsResponseDto[]> {
-    // TODO we should keep in my that we eventually need to implement pagination, query parameters, and filtering such as by age, by gender, etc.
-    return await this.teamsService.getAllTeams();
-  }
-
   @Delete(':teamId')
-  @ApiOperation({ summary: 'Soft delete a team' })
+  @ApiOperation({ summary: 'Delete a team' })
   @ApiResponse({
     status: 200,
-    description: 'This endpoint soft deletes a team',
+    description:
+      'This endpoint deletes a team. Soft and hard delete options are available',
     type: DeleteOperationResponseDto,
   })
   async deleteTeamById(
-    @Param('teamId') teamId: string,
+    @Param('teamId', ParseIntPipe) teamId: number,
+    @Query('hard') hard?: boolean,
   ): Promise<DeleteOperationResponseDto> {
-    // TODO add query that allow to soft delete a team
-    console.log('====================================');
-    console.log('Delete team with id:', teamId);
-    console.log('====================================');
-    return;
+    if (hard) {
+      return await this.teamsService.hardDeleteTeamById(teamId);
+    } else {
+      return await this.teamsService.softDeleteTeamById(teamId);
+    }
   }
 }
