@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { LogoUrls } from 'src/common/@types/logo-urls.type';
 import { DeleteResult } from 'typeorm';
 import { TeamAgeCategory } from '../@types/team-age-category.types';
 import { TeamGender } from '../@types/team-gender.types';
@@ -13,14 +14,14 @@ export class TeamsService {
   async createTeam(
     name: string,
     description: string,
-    logos: string[],
+    logo: LogoUrls,
     ageGroup: TeamAgeCategory,
     gender: TeamGender,
   ): Promise<CreateTeamResponseDto> {
     return await this.teamsRepository.createTeam(
       name,
       description,
-      logos,
+      logo,
       ageGroup,
       gender,
     );
@@ -30,7 +31,7 @@ export class TeamsService {
     teamId: number,
     name: string,
     description: string,
-    logos: string[],
+    logo: LogoUrls,
     ageGroup: TeamAgeCategory,
     gender: TeamGender,
   ): Promise<CreateTeamResponseDto> {
@@ -38,7 +39,7 @@ export class TeamsService {
       teamId,
       name,
       description,
-      logos,
+      logo,
       ageGroup,
       gender,
     );
