@@ -44,11 +44,11 @@ export class TeamsController {
   async createTeam(
     @Body() body: CreateTeamRequestDto,
   ): Promise<CreateTeamResponseDto> {
-    const { name, description, logos, ageGroup, gender } = body;
+    const { name, description, logo, ageGroup, gender } = body;
     return this.teamsService.createTeam(
       name,
       description,
-      logos,
+      logo,
       ageGroup,
       gender,
     );
@@ -92,12 +92,12 @@ export class TeamsController {
     @Body() body: UpdateTeamRequestDto,
     @Param('teamId', ParseIntPipe) teamId: number,
   ): Promise<UpdateTeamResponseDto> {
-    const { name, description, logos, ageGroup, gender } = body;
+    const { name, description, logo, ageGroup, gender } = body;
     return this.teamsService.updateTeam(
       teamId,
       name,
       description,
-      logos,
+      logo,
       ageGroup,
       gender,
     );
