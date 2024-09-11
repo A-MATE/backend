@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { MatchesModule } from './matches/matches.module';
+import { Organization } from './organizations/entities/organization.entity';
 import { OrganizationsModule } from './organizations/organizations.module';
 import { PlayersModule } from './players/players.module';
 import { Role } from './roles/entities/role.entity';
@@ -34,7 +35,7 @@ import { UsersModule } from './users/users.module';
         username: configService.get('DATABASE_USER'),
         password: configService.get('DATABASE_PASSWORD'),
         database: configService.get('DATABASE_NAME'),
-        entities: [Role, UserTeamRole, Team],
+        entities: [Role, UserTeamRole, Team, Organization],
         synchronize: ['development', 'local'].includes(
           configService.get('NODE_ENV'),
         ),
