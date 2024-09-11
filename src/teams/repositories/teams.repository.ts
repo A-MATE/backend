@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
+import { LogoUrls } from 'src/common/@types/logo-urls.type';
 import { DeleteResult, Repository } from 'typeorm';
 import { TeamAgeCategory } from '../@types/team-age-category.types';
 import { TeamGender } from '../@types/team-gender.types';
@@ -16,14 +17,14 @@ export class TeamsRepository {
   async createTeam(
     name: string,
     description: string,
-    logos: string[],
+    logo: LogoUrls,
     ageGroup: TeamAgeCategory,
     gender: TeamGender,
   ): Promise<Team> {
     const newTeam = this.repository.create({
       name,
       description,
-      logos,
+      logo,
       ageGroup,
       gender,
     });
@@ -31,18 +32,18 @@ export class TeamsRepository {
   }
 
   async updateTeam(
-    teamId: number,
+    id: number,
     name: string,
     description: string,
-    logos: string[],
+    logo: LogoUrls,
     ageGroup: TeamAgeCategory,
     gender: TeamGender,
   ) {
-    const updatedTeam = await this.repository.findOneBy({ id: teamId });
+    const updatedTeam = await this.repository.findOneBy({ id });
 
     if (name) updatedTeam.name = name;
     if (description) updatedTeam.description = description;
-    if (logos) updatedTeam.logos = logos;
+    if (logo) updatedTeam.logo = logo;
     if (ageGroup) updatedTeam.ageGroup = ageGroup;
     if (gender) updatedTeam.gender = gender;
 

@@ -1,8 +1,11 @@
+import { LogoUrls } from 'src/common/@types/logo-urls.type';
 import {
   Column,
+  CreateDateColumn,
   DeleteDateColumn,
   Entity,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { TeamAgeCategory } from '../@types/team-age-category.types';
 import { TeamGender } from '../@types/team-gender.types';
@@ -18,8 +21,8 @@ export class Team {
   @Column({ type: 'text', nullable: true })
   description: string;
 
-  @Column('simple-array', { nullable: true })
-  logos: string[];
+  @Column('jsonb')
+  logo: LogoUrls;
 
   @Column({ nullable: true })
   ageGroup: TeamAgeCategory;
@@ -27,6 +30,15 @@ export class Team {
   @Column({ nullable: true })
   gender: TeamGender;
 
-  @DeleteDateColumn()
-  deletedAt: Date;
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @Column({ default: true })
+  isActive: boolean;
+
+  @DeleteDateColumn({ nullable: true })
+  deletedAt?: Date;
 }
