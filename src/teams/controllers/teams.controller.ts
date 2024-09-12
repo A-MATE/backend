@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -76,7 +75,7 @@ export class TeamsController {
     type: GetTeamByIdResponseDto,
   })
   async getTeamById(
-    @Param('teamId', ParseIntPipe) teamId: number,
+    @Param('teamId') teamId: string,
   ): Promise<UpdateTeamResponseDto> {
     return await this.teamsService.getTeamById(teamId);
   }
@@ -90,7 +89,7 @@ export class TeamsController {
   })
   async updateTeam(
     @Body() body: UpdateTeamRequestDto,
-    @Param('teamId', ParseIntPipe) teamId: number,
+    @Param('teamId') teamId: string,
   ): Promise<UpdateTeamResponseDto> {
     const { name, description, logo, ageGroup, gender } = body;
     return this.teamsService.updateTeam(
@@ -112,7 +111,7 @@ export class TeamsController {
     type: DeleteOperationResponseDto,
   })
   async deleteTeamById(
-    @Param('teamId', ParseIntPipe) teamId: number,
+    @Param('teamId') teamId: string,
     @Query('hard') hard?: boolean,
   ): Promise<DeleteOperationResponseDto> {
     if (hard) {

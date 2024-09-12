@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { LogoUrls } from 'src/common/@types/logo-urls.type';
+import { PhotoUrls } from 'src/common/@types/logo-urls.type';
 import { OrganizationType } from '../@types/organization.types';
 
 export class UpdateOrganizationRequestDto {
@@ -15,7 +15,7 @@ export class UpdateOrganizationRequestDto {
   type?: OrganizationType;
 
   @ApiProperty()
-  logo?: LogoUrls;
+  logo?: PhotoUrls;
 
   @ApiProperty()
   isActive?: boolean;
@@ -23,7 +23,7 @@ export class UpdateOrganizationRequestDto {
 
 export class UpdateOrganizationResponseDto {
   @ApiProperty()
-  id: number;
+  id: string;
 
   @ApiProperty()
   name: string;
@@ -37,7 +37,7 @@ export class UpdateOrganizationResponseDto {
   type: OrganizationType;
 
   @ApiProperty()
-  logo?: LogoUrls;
+  logo?: PhotoUrls;
 
   @ApiProperty({
     description: 'The date and time the organization was created',
