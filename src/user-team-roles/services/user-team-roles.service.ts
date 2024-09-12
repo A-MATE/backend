@@ -9,9 +9,9 @@ export class UserTeamRolesService {
     private readonly userTeamRolesRepository: UserTeamRolesRepository,
   ) {}
   async createNewUserTeamRole(
-    userId: number,
-    teamId: number,
-    roleId: number,
+    userId: string,
+    teamId: string,
+    roleId: string,
   ): Promise<UserTeamRole> {
     // TODO verify if user and team exist
     // TODO verify if role exists
@@ -26,9 +26,9 @@ export class UserTeamRolesService {
   }
 
   async updateUserTeamRole(
-    userId: number,
-    teamId: number,
-    roleId: number,
+    userId: string,
+    teamId: string,
+    roleId: string,
   ): Promise<UserTeamRole> {
     return await this.userTeamRolesRepository.updateUserTeamRole(
       userId,
@@ -38,9 +38,9 @@ export class UserTeamRolesService {
   }
 
   async deleteUserTeamRole(
-    userId: number,
-    teamId: number,
-    roleId: number,
+    userId: string,
+    teamId: string,
+    roleId: string,
   ): Promise<DeleteResult> {
     return await this.userTeamRolesRepository.deleteUserTeamRole(
       userId,

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { LogoUrls } from 'src/common/@types/logo-urls.type';
+import { PhotoUrls } from 'src/common/@types/logo-urls.type';
 import { OrganizationType } from '../@types/organization.types';
 import { CreateOrganizationResponseDto } from '../dtos/create-organization.dto';
 import { OrganizationsRepository } from '../repositories/organizations.repository';
@@ -13,7 +13,7 @@ export class OrganizationsService {
   async createOrganization(
     name: string,
     type: OrganizationType,
-    logo?: LogoUrls,
+    logo?: PhotoUrls,
   ): Promise<CreateOrganizationResponseDto> {
     return await this.organizationsRepository.createOrganization(
       name,
@@ -23,10 +23,10 @@ export class OrganizationsService {
   }
 
   async updateOrganization(
-    id: number,
+    id: string,
     name?: string,
     type?: OrganizationType,
-    logo?: LogoUrls,
+    logo?: PhotoUrls,
     isActive?: boolean,
   ) {
     return await this.organizationsRepository.updateOrganization(
@@ -38,7 +38,7 @@ export class OrganizationsService {
     );
   }
 
-  async getOrganizationById(id: number) {
+  async getOrganizationById(id: string) {
     return await this.organizationsRepository.getOrganizationById(id);
   }
 
@@ -46,11 +46,11 @@ export class OrganizationsService {
     return await this.organizationsRepository.getAllOrganizations(withDeleted);
   }
 
-  async softDeleteOrganization(id: number) {
+  async softDeleteOrganization(id: string) {
     return await this.organizationsRepository.softDeleteOrganization(id);
   }
 
-  async hardDeleteOrganization(id: number) {
+  async hardDeleteOrganization(id: string) {
     return await this.organizationsRepository.hardDeleteOrganization(id);
   }
 }
