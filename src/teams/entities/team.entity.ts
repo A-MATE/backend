@@ -1,4 +1,4 @@
-import { LogoUrls } from 'src/common/@types/logo-urls.type';
+import { PhotoUrls } from 'src/common/@types/logo-urls.type';
 import {
   Column,
   CreateDateColumn,
@@ -12,8 +12,8 @@ import { TeamGender } from '../@types/team-gender.types';
 
 @Entity()
 export class Team {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   name: string;
@@ -22,7 +22,7 @@ export class Team {
   description: string;
 
   @Column('jsonb')
-  logo: LogoUrls;
+  logo: PhotoUrls;
 
   @Column({ nullable: true })
   ageGroup: TeamAgeCategory;

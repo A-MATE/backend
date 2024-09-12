@@ -11,18 +11,18 @@ export class UserTeamRolesRepository {
   ) {}
 
   async createUserTeamRole(
-    userId: number,
-    teamId: number,
-    roleId: number,
+    userId: string,
+    teamId: string,
+    roleId: string,
   ): Promise<UserTeamRole> {
     const newUserTeamRole = this.repository.create({ userId, teamId, roleId });
     return this.repository.save(newUserTeamRole);
   }
 
   async updateUserTeamRole(
-    userId: number,
-    teamId: number,
-    roleId: number,
+    userId: string,
+    teamId: string,
+    roleId: string,
   ): Promise<UserTeamRole> {
     const updatedTeamRole = await this.repository.findOneBy({
       userId,
@@ -35,9 +35,9 @@ export class UserTeamRolesRepository {
   }
 
   async deleteUserTeamRole(
-    userId: number,
-    teamId: number,
-    roleId: number,
+    userId: string,
+    teamId: string,
+    roleId: string,
   ): Promise<DeleteResult> {
     return await this.repository.delete({ userId, teamId, roleId });
   }

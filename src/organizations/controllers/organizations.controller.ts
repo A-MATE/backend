@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -57,7 +56,7 @@ export class OrganizationsController {
     type: UpdateOrganizationResponseDto,
   })
   async updateOrganization(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: string,
     @Body() body: UpdateOrganizationRequestDto,
   ): Promise<UpdateOrganizationResponseDto> {
     const { name, type, logo, isActive } = body;
@@ -78,7 +77,7 @@ export class OrganizationsController {
     type: GetOrganizationResponseDto,
   })
   async getOrganizationById(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: string,
   ): Promise<GetOrganizationResponseDto> {
     return await this.organizationsService.getOrganizationById(id);
   }
@@ -104,7 +103,7 @@ export class OrganizationsController {
     type: DeleteOperationResponseDto,
   })
   async deleteOrganization(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: string,
     @Query('isHardDelete') isHardDelete?: boolean,
   ): Promise<DeleteOperationResponseDto> {
     if (isHardDelete) {

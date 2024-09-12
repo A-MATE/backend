@@ -3,15 +3,15 @@ import { Column, Entity, PrimaryGeneratedColumn, Unique } from 'typeorm';
 @Entity()
 @Unique(['userId', 'teamId', 'roleId'])
 export class UserTeamRole {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
-  userId: number;
+  userId: string;
 
   @Column()
-  teamId: number;
+  teamId: string;
 
   @Column()
-  roleId: number;
+  roleId: string;
 }

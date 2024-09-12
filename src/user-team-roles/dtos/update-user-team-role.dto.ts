@@ -3,21 +3,21 @@ import { IsNotEmpty } from 'class-validator';
 
 export class UpdateUserTeamRoleDto {
   @IsNotEmpty()
-  readonly roleId: number;
+  readonly roleId: string;
 }
 
 export class UpdateUserTeamRoleResponseDto {
   @ApiProperty({ description: 'ID of the user' })
-  readonly userId: number;
+  readonly userId: string;
 
   @ApiProperty({ description: 'ID of the team' })
-  readonly teamId: number;
+  readonly teamId: string;
 
   @ApiProperty({ description: 'ID of the assigned role' })
-  readonly roleId: number;
+  readonly roleId: string;
 
   @ApiProperty({
     description: 'ID of the association between the user, team, and role',
   })
-  readonly id: number;
+  readonly id: string;
 }

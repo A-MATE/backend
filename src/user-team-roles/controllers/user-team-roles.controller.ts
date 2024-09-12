@@ -32,12 +32,13 @@ export class UserTeamRolesController {
   async createNewUserTeamRole(
     @Param('userId') userId: string,
     @Param('teamId') teamId: string,
-    @Body('roleId') roleId: CreateUserTeamRoleDto,
+    @Body() body: CreateUserTeamRoleDto,
   ): Promise<CreateUserTeamRoleResponseDto> {
+    const { roleId } = body;
     return this.userTeamRolesService.createNewUserTeamRole(
-      +userId,
-      +teamId,
-      +roleId,
+      userId,
+      teamId,
+      roleId,
     );
   }
 
@@ -51,13 +52,10 @@ export class UserTeamRolesController {
   async updateUserTeamRole(
     @Param('userId') userId: string,
     @Param('teamId') teamId: string,
-    @Body('roleId') roleId: UpdateUserTeamRoleDto,
+    @Body() body: UpdateUserTeamRoleDto,
   ): Promise<UpdateUserTeamRoleResponseDto> {
-    return this.userTeamRolesService.updateUserTeamRole(
-      +userId,
-      +teamId,
-      +roleId,
-    );
+    const { roleId } = body;
+    return this.userTeamRolesService.updateUserTeamRole(userId, teamId, roleId);
   }
 
   @Delete()
@@ -70,12 +68,8 @@ export class UserTeamRolesController {
   async deleteUserTeamRole(
     @Param('userId') userId: string,
     @Param('teamId') teamId: string,
-    @Body('roleId') roleId: string,
+    @Param('roleId') roleId: string,
   ): Promise<DeleteOperationResponseDto> {
-    return this.userTeamRolesService.deleteUserTeamRole(
-      +userId,
-      +teamId,
-      +roleId,
-    );
+    return this.userTeamRolesService.deleteUserTeamRole(userId, teamId, roleId);
   }
 }

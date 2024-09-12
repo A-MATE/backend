@@ -1,4 +1,4 @@
-export type LogoUrls = {
+export type PhotoUrls = {
   thumbnail: string;
   large: string;
 };
