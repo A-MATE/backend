@@ -16,14 +16,14 @@ export class RolesService {
   }
 
   async updateRoleById(
-    id: number,
+    id: string,
     role: string,
     description: string,
   ): Promise<Role> {
     return await this.rolesRepository.updateRole(id, role, description);
   }
 
-  async deleteRoleById(id: number): Promise<DeleteResult> {
+  async deleteRoleById(id: string): Promise<DeleteResult> {
     return await this.rolesRepository.deleteRole(id);
   }
 }

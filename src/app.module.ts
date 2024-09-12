@@ -16,6 +16,9 @@ import { Team } from './teams/entities/team.entity';
 import { TeamsModule } from './teams/teams.module';
 import { UserTeamRole } from './user-team-roles/entities/user-team-role';
 import { UserTeamRolesModule } from './user-team-roles/user-team-roles.module';
+import { UserTeam } from './user-teams/entities/user-team.entity';
+import { UserTeamsModule } from './user-teams/user-teams.module';
+import { User } from './users/entities/user.entity';
 import { UsersModule } from './users/users.module';
 
 @Module({
@@ -35,7 +38,7 @@ import { UsersModule } from './users/users.module';
         username: configService.get('DATABASE_USER'),
         password: configService.get('DATABASE_PASSWORD'),
         database: configService.get('DATABASE_NAME'),
-        entities: [Role, UserTeamRole, Team, Organization],
+        entities: [Role, UserTeamRole, Team, Organization, User, UserTeam],
         synchronize: ['development', 'local'].includes(
           configService.get('NODE_ENV'),
         ),
@@ -51,6 +54,7 @@ import { UsersModule } from './users/users.module';
     StaffMembersModule,
     SponsorsModule,
     OrganizationsModule,
+    UserTeamsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

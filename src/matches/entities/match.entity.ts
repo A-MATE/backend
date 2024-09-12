@@ -9,8 +9,8 @@ import {
 
 @Entity()
 export class Match {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   date: Date;

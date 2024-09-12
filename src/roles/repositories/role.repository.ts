@@ -23,12 +23,12 @@ export class RolesRepository {
     return this.repository.find();
   }
 
-  async findRoleById(id: number): Promise<Role> {
+  async findRoleById(id: string): Promise<Role> {
     return this.repository.findOneBy({ id });
   }
 
   async updateRole(
-    id: number,
+    id: string,
     name?: string,
     description?: string,
   ): Promise<Role> {
@@ -45,7 +45,7 @@ export class RolesRepository {
     return this.repository.save(role);
   }
 
-  async deleteRole(id: number): Promise<DeleteResult> {
+  async deleteRole(id: string): Promise<DeleteResult> {
     return await this.repository.delete(id);
   }
 }

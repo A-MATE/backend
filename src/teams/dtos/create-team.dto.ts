@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
-import { LogoUrls } from 'src/common/@types/logo-urls.type';
+import { PhotoUrls } from 'src/common/@types/logo-urls.type';
 import { TeamAgeCategory } from '../@types/team-age-category.types';
 import { TeamGender } from '../@types/team-gender.types';
 
@@ -28,7 +28,7 @@ export class CreateTeamRequestDto {
     required: false,
   })
   @IsOptional()
-  logo?: LogoUrls;
+  logo?: PhotoUrls;
 
   @ApiProperty({
     enum: TeamAgeCategory,
@@ -56,7 +56,7 @@ export class CreateTeamResponseDto {
     description: 'The unique identifier of the team',
     example: 1,
   })
-  id: number;
+  id: string;
 
   @ApiProperty({
     description: 'The name of the team',
@@ -76,7 +76,7 @@ export class CreateTeamResponseDto {
     example: ['http://example.com/logo1.png', 'http://example.com/logo2.png'],
     required: false,
   })
-  logo?: LogoUrls;
+  logo?: PhotoUrls;
 
   @ApiProperty({
     description: 'The age group of the team (e.g., U18, U21)',

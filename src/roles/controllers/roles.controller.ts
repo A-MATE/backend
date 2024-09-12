@@ -66,10 +66,10 @@ export class RolesController {
   })
   async updateRoleById(
     @Param('roleId') roleId: string,
-    @Body() Body: UpdateRoleRequestDto,
+    @Body() body: UpdateRoleRequestDto,
   ): Promise<UpdateRoleResponseDto> {
-    const { role, description } = Body;
-    return this.rolesService.updateRoleById(+roleId, role, description);
+    const { role, description } = body;
+    return this.rolesService.updateRoleById(roleId, role, description);
   }
 
   @Delete(':roleId')
@@ -82,6 +82,6 @@ export class RolesController {
   async deleteRoleById(
     @Param('roleId') roleId: string,
   ): Promise<DeleteOperationResponseDto> {
-    return this.rolesService.deleteRoleById(+roleId);
+    return this.rolesService.deleteRoleById(roleId);
   }
 }

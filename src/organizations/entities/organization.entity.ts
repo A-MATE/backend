@@ -1,4 +1,4 @@
-import { LogoUrls } from 'src/common/@types/logo-urls.type';
+import { PhotoUrls } from 'src/common/@types/logo-urls.type';
 import {
   Column,
   CreateDateColumn,
@@ -11,8 +11,8 @@ import { OrganizationType } from '../@types/organization.types';
 
 @Entity()
 export class Organization {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   name: string;
@@ -24,7 +24,7 @@ export class Organization {
   type: OrganizationType;
 
   @Column('jsonb')
-  logo: LogoUrls;
+  logo: PhotoUrls;
 
   @CreateDateColumn()
   createdAt: Date;

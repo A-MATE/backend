@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { LogoUrls } from 'src/common/@types/logo-urls.type';
+import { PhotoUrls } from 'src/common/@types/logo-urls.type';
 import { DeleteResult, Repository } from 'typeorm';
 import { OrganizationType } from '../@types/organization.types';
 import { CreateOrganizationResponseDto } from '../dtos/create-organization.dto';
@@ -16,7 +16,7 @@ export class OrganizationsRepository {
   async createOrganization(
     name: string,
     type: OrganizationType,
-    logo?: LogoUrls,
+    logo?: PhotoUrls,
   ): Promise<CreateOrganizationResponseDto> {
     const newOrganization = this.repository.create({
       name,
@@ -27,10 +27,10 @@ export class OrganizationsRepository {
   }
 
   async updateOrganization(
-    id: number,
+    id: string,
     name?: string,
     type?: OrganizationType,
-    logo?: LogoUrls,
+    logo?: PhotoUrls,
     isActive?: boolean,
   ): Promise<Organization> {
     const organization = await this.repository.findOneBy({ id });
@@ -43,7 +43,7 @@ export class OrganizationsRepository {
     return this.repository.save(organization);
   }
 
-  async getOrganizationById(id: number): Promise<Organization> {
+  async getOrganizationById(id: string): Promise<Organization> {
     return await this.repository.findOne({ where: { id } });
   }
 
@@ -54,11 +54,11 @@ export class OrganizationsRepository {
     return this.repository.find();
   }
 
-  async softDeleteOrganization(id: number): Promise<DeleteResult> {
+  async softDeleteOrganization(id: string): Promise<DeleteResult> {
     return await this.repository.softDelete(id);
   }
 
-  async hardDeleteOrganization(id: number): Promise<DeleteResult> {
+  async hardDeleteOrganization(id: string): Promise<DeleteResult> {
     return this.repository.delete(id);
   }
 }

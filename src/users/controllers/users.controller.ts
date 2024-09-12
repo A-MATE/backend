@@ -1,4 +1,108 @@
-import { Controller } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+
+import { DeleteOperationResponseDto } from 'src/common/dtos/delete-operation-response.dto';
+import { CreateUserRequestDto } from '../dtos/create-user-request.dto';
+import { UpdateUserRequestDto } from '../dtos/update-user-request.dto';
+import { User } from '../entities/user.entity';
+import { UsersService } from '../services/users.service';
 
 @Controller('users')
-export class UsersController {}
+@ApiTags('Users API')
+@ApiBearerAuth('JWT')
+export class UsersController {
+  constructor(private readonly usersService: UsersService) {}
+
+  @Post()
+  @ApiOperation({ summary: 'Create a new user' })
+  @ApiResponse({
+    status: 201,
+    description: 'The user has been successfully created.',
+    type: User,
+  })
+  async createUser(@Body() body: CreateUserRequestDto): Promise<User> {
+    console.log('====================================');
+    console.log('Hello from the controller');
+    console.log('====================================');
+    const { email, password } = body;
+    return await this.usersService.createUser(email, password);
+  }
+
+  @Patch(':id')
+  @ApiOperation({ summary: 'Update a user' })
+  @ApiResponse({
+    status: 200,
+    description: 'The user has been successfully updated.',
+    type: User,
+  })
+  async updateUser(
+    @Param('id') id: string,
+    @Body() body: UpdateUserRequestDto,
+  ): Promise<User> {
+    const { firstName, lastName, bio, avatar, isActive } = body;
+    return await this.usersService.updateUser(
+      id,
+      firstName,
+      lastName,
+      bio,
+      avatar,
+      isActive,
+    );
+  }
+
+  @Get()
+  @ApiOperation({ summary: 'Get all users' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of all users',
+    type: [User],
+  })
+  async getAllUsers(
+    @Query('withSoftDeleted') withSoftDeleted: boolean = false,
+  ): Promise<User[]> {
+    return await this.usersService.getAllUsers(withSoftDeleted);
+  }
+
+  @Get(':id')
+  @ApiOperation({ summary: 'Get user by ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'The user with the specified ID',
+    type: User,
+  })
+  async getUserById(@Param('id') id: string): Promise<User> {
+    return this.usersService.getUserById(id);
+  }
+
+  @Delete(':id')
+  @ApiOperation({ summary: 'Delete or soft delete a user' })
+  @ApiResponse({
+    status: 200,
+    description: 'The user has been successfully deleted.',
+    type: DeleteOperationResponseDto,
+  })
+  async deleteUser(
+    @Param('id') id: string,
+    @Query('isHardDelete') isHardDelete?: boolean,
+  ): Promise<DeleteOperationResponseDto> {
+    if (isHardDelete) {
+      return await this.usersService.softDeleteUser(id);
+    } else {
+      return await this.usersService.hardDeleteUser(id);
+    }
+  }
+}
