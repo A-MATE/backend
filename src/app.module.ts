@@ -8,16 +8,12 @@ import { MatchesModule } from './matches/matches.module';
 import { Organization } from './organizations/entities/organization.entity';
 import { OrganizationsModule } from './organizations/organizations.module';
 import { PlayersModule } from './players/players.module';
-import { Role } from './roles/entities/role.entity';
+
 import { RolesModule } from './roles/roles.module';
 import { SponsorsModule } from './sponsors/sponsors.module';
 import { StaffMembersModule } from './staff-members/staff-members.module';
 import { Team } from './teams/entities/team.entity';
 import { TeamsModule } from './teams/teams.module';
-import { UserTeamRole } from './user-team-roles/entities/user-team-role';
-import { UserTeamRolesModule } from './user-team-roles/user-team-roles.module';
-import { UserTeam } from './user-teams/entities/user-team.entity';
-import { UserTeamsModule } from './user-teams/user-teams.module';
 import { User } from './users/entities/user.entity';
 import { UsersModule } from './users/users.module';
 
@@ -38,7 +34,7 @@ import { UsersModule } from './users/users.module';
         username: configService.get('DATABASE_USER'),
         password: configService.get('DATABASE_PASSWORD'),
         database: configService.get('DATABASE_NAME'),
-        entities: [Role, UserTeamRole, Team, Organization, User, UserTeam],
+        entities: [Team, Organization, User],
         synchronize: ['development', 'local'].includes(
           configService.get('NODE_ENV'),
         ),
@@ -48,13 +44,11 @@ import { UsersModule } from './users/users.module';
     AuthModule,
     TeamsModule,
     RolesModule,
-    UserTeamRolesModule,
     PlayersModule,
     MatchesModule,
     StaffMembersModule,
     SponsorsModule,
     OrganizationsModule,
-    UserTeamsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

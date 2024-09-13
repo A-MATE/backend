@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { PhotoUrls } from 'src/common/@types/logo-urls.type';
+import { Organization } from 'src/organizations/entities/organization.entity';
 import { DeleteResult, Repository } from 'typeorm';
 import { TeamAgeCategory } from '../@types/team-age-category.types';
 import { TeamGender } from '../@types/team-gender.types';
@@ -20,6 +21,7 @@ export class TeamsRepository {
     logo: PhotoUrls,
     ageGroup: TeamAgeCategory,
     gender: TeamGender,
+    organization: Organization,
   ): Promise<Team> {
     const newTeam = this.repository.create({
       name,
@@ -27,6 +29,7 @@ export class TeamsRepository {
       logo,
       ageGroup,
       gender,
+      organization,
     });
     return this.repository.save(newTeam);
   }
