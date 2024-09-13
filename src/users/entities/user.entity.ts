@@ -1,27 +1,42 @@
 import { ApiProperty } from '@nestjs/swagger';
+
 import { PhotoUrls } from 'src/common/@types/logo-urls.type';
+import { Team } from 'src/teams/entities/team.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
+  Unique,
   UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
+@Unique(['email', 'team'])
 export class User {
   @PrimaryGeneratedColumn('uuid')
   @ApiProperty()
   id: string;
 
-  @Column({ unique: true })
+  @Column()
   @ApiProperty()
   email: string;
 
   @Column()
   @ApiProperty()
   password: string;
+
+  @Column({ nullable: false })
+  @ApiProperty()
+  teamId: string;
+
+  @ManyToOne(() => Team, (team) => team.users)
+  @JoinColumn({ name: 'teamId' })
+  @ApiProperty({ type: () => Team })
+  team: Team;
 
   @Column({ nullable: true })
   @ApiProperty()

@@ -1,9 +1,11 @@
 import { PhotoUrls } from 'src/common/@types/logo-urls.type';
+import { User } from 'src/users/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -29,6 +31,9 @@ export class Team {
 
   @Column({ nullable: true })
   gender: TeamGender;
+
+  @OneToMany(() => User, (user: User) => user.team)
+  users: User[];
 
   @CreateDateColumn()
   createdAt: Date;
