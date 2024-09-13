@@ -35,11 +35,8 @@ export class UsersController {
     type: User,
   })
   async createUser(@Body() body: CreateUserRequestDto): Promise<User> {
-    console.log('====================================');
-    console.log('Hello from the controller');
-    console.log('====================================');
-    const { email, password } = body;
-    return await this.usersService.createUser(email, password);
+    const { email, password, teamId } = body;
+    return await this.usersService.createUser(email, password, teamId);
   }
 
   @Patch(':id')

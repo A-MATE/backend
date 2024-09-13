@@ -1,11 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsBoolean,
-  IsDate,
+  IsDateString,
   IsEmail,
   IsNotEmpty,
   IsOptional,
   IsString,
+  IsUUID,
   MinLength,
 } from 'class-validator';
 import { PhotoUrls } from 'src/common/@types/logo-urls.type';
@@ -26,8 +27,8 @@ export class CreateUserRequestDto {
   lastName: string;
 
   @ApiProperty()
-  @IsDate()
-  birthDate: Date;
+  @IsDateString()
+  birthDate: string;
 
   @ApiProperty()
   @IsNotEmpty()
@@ -40,13 +41,16 @@ export class CreateUserRequestDto {
   @IsString()
   bio?: string;
 
-  @ApiProperty({
-    required: false,
-  })
+  @ApiProperty({ required: false })
   @IsOptional()
   avatar?: PhotoUrls;
 
   @ApiProperty()
   @IsBoolean()
   isActive: boolean;
+
+  @ApiProperty()
+  @IsUUID()
+  @IsNotEmpty()
+  teamId: string;
 }
