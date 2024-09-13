@@ -1,9 +1,12 @@
 import { PhotoUrls } from 'src/common/@types/logo-urls.type';
+import { Team } from 'src/teams/entities/team.entity';
+import { User } from 'src/users/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -25,6 +28,12 @@ export class Organization {
 
   @Column('jsonb')
   logo: PhotoUrls;
+
+  @OneToMany(() => Team, (team) => team.organization)
+  teams: Team[];
+
+  @OneToMany(() => User, (user) => user.organization)
+  users: User[];
 
   @CreateDateColumn()
   createdAt: Date;

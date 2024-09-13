@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-
 import { PhotoUrls } from 'src/common/@types/logo-urls.type';
+import { Organization } from 'src/organizations/entities/organization.entity';
 import { Team } from 'src/teams/entities/team.entity';
 import {
   Column,
@@ -15,7 +15,7 @@ import {
 } from 'typeorm';
 
 @Entity()
-@Unique(['email', 'team'])
+@Unique(['email', 'team']) // Contrainte pour éviter les doublons par équipe
 export class User {
   @PrimaryGeneratedColumn('uuid')
   @ApiProperty()
@@ -29,14 +29,21 @@ export class User {
   @ApiProperty()
   password: string;
 
-  @Column({ nullable: false })
+  @Column()
   @ApiProperty()
-  teamId: string;
+  role: string;
 
-  @ManyToOne(() => Team, (team) => team.users)
+  @ManyToOne(() => Organization, (organization) => organization.users, {
+    nullable: false,
+  })
+  @JoinColumn({ name: 'organizationId' })
+  @ApiProperty({ type: () => Organization })
+  organization?: Organization;
+
+  @ManyToOne(() => Team, (team) => team.users, { nullable: true })
   @JoinColumn({ name: 'teamId' })
   @ApiProperty({ type: () => Team })
-  team: Team;
+  team?: Team;
 
   @Column({ nullable: true })
   @ApiProperty()

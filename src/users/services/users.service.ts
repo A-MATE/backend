@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
-
+import * as bcrypt from 'bcrypt';
 import { PhotoUrls } from 'src/common/@types/logo-urls.type';
+import { UserRole } from 'src/common/@types/user-role.types';
 import { DeleteOperationResponseDto } from 'src/common/dtos/delete-operation-response.dto';
 import { User } from '../entities/user.entity';
 import { UsersRepository } from '../repositories/users.repository';
@@ -14,7 +15,10 @@ export class UsersService {
     password: string,
     teamId: string,
   ): Promise<User> {
-    return this.usersRepository.createUser(email, password, teamId);
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    const role = UserRole.USER;
+    return this.usersRepository.createUser(email, hashedPassword, teamId, role);
   }
 
   async updateUser(

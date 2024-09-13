@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator';
 import { PhotoUrls } from 'src/common/@types/logo-urls.type';
 import { TeamAgeCategory } from '../@types/team-age-category.types';
 import { TeamGender } from '../@types/team-gender.types';
@@ -12,6 +12,14 @@ export class CreateTeamRequestDto {
   @IsNotEmpty()
   @IsString()
   name: string;
+
+  @ApiProperty({
+    description: 'The unique identifier of the organization',
+    example: 'a1b2c3d4-e5f6-7g8h-9i0j-k1l2m3n4o5p6',
+  })
+  @IsNotEmpty()
+  @IsUUID()
+  organizationId: string;
 
   @ApiProperty({
     description: 'A brief description or biography of the team',
@@ -63,6 +71,12 @@ export class CreateTeamResponseDto {
     example: 'U18 Soccer Team',
   })
   name: string;
+
+  @ApiProperty({
+    description: 'The unique identifier of the organization owning the team',
+    example: 'a1b2c3d4-e5f6-7g8h-9i0j-k1l2m3n4o5p6',
+  })
+  organizationId: string;
 
   @ApiProperty({
     description: 'A brief description or biography of the team',
