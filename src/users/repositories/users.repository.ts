@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PhotoUrls } from 'src/common/@types/logo-urls.type';
+import { Team } from 'src/teams/entities/team.entity';
 import { DeleteResult, Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
 
@@ -9,13 +10,21 @@ export class UsersRepository {
   constructor(
     @InjectRepository(User)
     private readonly repository: Repository<User>,
+
+    @InjectRepository(Team)
+    private readonly teamsRepository: Repository<Team>,
   ) {}
 
-  async createUser(email: string, password: string): Promise<User> {
-    console.log('====================================');
-    console.log('Hello from the repository');
-    console.log('====================================');
-    const newUser = this.repository.create({ email, password });
+  async createUser(
+    email: string,
+    password: string,
+    teamId: string,
+  ): Promise<User> {
+    const team = await this.teamsRepository.findOne({ where: { id: teamId } });
+    if (!team) {
+      throw new NotFoundException(`Team with ID ${teamId} not found`);
+    }
+    const newUser = this.repository.create({ email, password, teamId });
     return await this.repository.save(newUser);
   }
 
