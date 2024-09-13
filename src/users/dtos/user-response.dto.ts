@@ -34,4 +34,7 @@ export class UserResponseDto {
 
   @ApiProperty()
   isActive: boolean;
+
+  @ApiProperty()
+  teamId: string;
 }

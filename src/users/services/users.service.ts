@@ -9,11 +9,12 @@ import { UsersRepository } from '../repositories/users.repository';
 export class UsersService {
   constructor(private readonly usersRepository: UsersRepository) {}
 
-  async createUser(email: string, password: string): Promise<User> {
-    console.log('====================================');
-    console.log('Hello from the service');
-    console.log('====================================');
-    return this.usersRepository.createUser(email, password);
+  async createUser(
+    email: string,
+    password: string,
+    teamId: string,
+  ): Promise<User> {
+    return this.usersRepository.createUser(email, password, teamId);
   }
 
   async updateUser(
