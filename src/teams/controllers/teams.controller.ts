@@ -43,13 +43,14 @@ export class TeamsController {
   async createTeam(
     @Body() body: CreateTeamRequestDto,
   ): Promise<CreateTeamResponseDto> {
-    const { name, description, logo, ageGroup, gender } = body;
+    const { name, description, logo, ageGroup, gender, organizationId } = body;
     return this.teamsService.createTeam(
       name,
       description,
       logo,
       ageGroup,
       gender,
+      organizationId,
     );
   }
 

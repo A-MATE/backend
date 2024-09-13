@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PhotoUrls } from 'src/common/@types/logo-urls.type';
+import { OrganizationsRepository } from 'src/organizations/repositories/organizations.repository';
 import { DeleteResult } from 'typeorm';
 import { TeamAgeCategory } from '../@types/team-age-category.types';
 import { TeamGender } from '../@types/team-gender.types';
@@ -9,7 +10,10 @@ import { TeamsRepository } from '../repositories/teams.repository';
 
 @Injectable()
 export class TeamsService {
-  constructor(private readonly teamsRepository: TeamsRepository) {}
+  constructor(
+    private readonly teamsRepository: TeamsRepository,
+    private readonly organizationsRepository: OrganizationsRepository,
+  ) {}
 
   async createTeam(
     name: string,
@@ -17,14 +21,29 @@ export class TeamsService {
     logo: PhotoUrls,
     ageGroup: TeamAgeCategory,
     gender: TeamGender,
+    organizationId: string,
   ): Promise<CreateTeamResponseDto> {
-    return await this.teamsRepository.createTeam(
+    const organization =
+      await this.organizationsRepository.getOrganizationById(organizationId);
+    if (!organization) {
+      throw new NotFoundException(
+        `Organization with ID ${organizationId} not found`,
+      );
+    }
+
+    const team = await this.teamsRepository.createTeam(
       name,
       description,
       logo,
       ageGroup,
       gender,
+      organization,
     );
+
+    return {
+      ...team,
+      organizationId: team.organization.id,
+    };
   }
 
   async updateTeam(
@@ -35,7 +54,7 @@ export class TeamsService {
     ageGroup: TeamAgeCategory,
     gender: TeamGender,
   ): Promise<CreateTeamResponseDto> {
-    return await this.teamsRepository.updateTeam(
+    const team = await this.teamsRepository.updateTeam(
       teamId,
       name,
       description,
@@ -43,20 +62,48 @@ export class TeamsService {
       ageGroup,
       gender,
     );
+
+    return {
+      ...team,
+      organizationId: team.organization.id,
+    };
   }
+
   async getAllTeams(
     withSoftDeleted: boolean = false,
   ): Promise<GetAllTeamsResponseDto[]> {
-    return await this.teamsRepository.getAllTeams(withSoftDeleted);
+    const teams = await this.teamsRepository.getAllTeams(withSoftDeleted);
+    return teams.map((team) => ({
+      id: team.id,
+      name: team.name,
+      description: team.description,
+      logo: team.logo,
+      ageGroup: team.ageGroup,
+      gender: team.gender,
+      organizationId: team.organization.id,
+      createdAt: team.createdAt,
+      updatedAt: team.updatedAt,
+      deletedAt: team.deletedAt,
+      isActive: team.isActive,
+    }));
   }
 
-  async getTeamById(id: string) {
-    return await this.teamsRepository.getTeamById(id);
+  async getTeamById(id: string): Promise<CreateTeamResponseDto> {
+    const team = await this.teamsRepository.getTeamById(id);
+    if (!team) {
+      throw new NotFoundException(`Team with ID ${id} not found`);
+    }
+
+    return {
+      ...team,
+      organizationId: team.organization.id,
+    };
   }
 
   async hardDeleteTeamById(id: string): Promise<DeleteResult> {
     return await this.teamsRepository.hardDeleteTeamById(id);
   }
+
   async softDeleteTeamById(id: string): Promise<DeleteResult> {
     return await this.teamsRepository.softDeleteTeamById(id);
   }

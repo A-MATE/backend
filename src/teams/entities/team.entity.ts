@@ -1,10 +1,12 @@
 import { PhotoUrls } from 'src/common/@types/logo-urls.type';
+import { Organization } from 'src/organizations/entities/organization.entity'; // Assurez-vous d'importer Organization
 import { User } from 'src/users/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -34,6 +36,9 @@ export class Team {
 
   @OneToMany(() => User, (user: User) => user.team)
   users: User[];
+
+  @ManyToOne(() => Organization, (organization) => organization.teams)
+  organization: Organization;
 
   @CreateDateColumn()
   createdAt: Date;

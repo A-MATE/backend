@@ -66,6 +66,12 @@ export class UpdateTeamResponseDto {
   name: string;
 
   @ApiProperty({
+    description: 'The unique identifier of the organization owning the team',
+    example: 'a1b2c3d4-e5f6-7g8h-9i0j-k1l2m3n4o5p6',
+  })
+  organizationId: string;
+
+  @ApiProperty({
     description: 'The updated description or biography of the team',
     example: 'The under-18 soccer team',
     required: false,
