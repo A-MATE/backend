@@ -15,7 +15,7 @@ import {
 } from 'typeorm';
 
 @Entity()
-@Unique(['email', 'team']) // Contrainte pour éviter les doublons par équipe
+@Unique(['email', 'team'])
 export class User {
   @PrimaryGeneratedColumn('uuid')
   @ApiProperty()
