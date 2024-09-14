@@ -15,6 +15,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
+import { Roles } from 'src/auth/decorators/roles.decorator';
 import { DeleteOperationResponseDto } from 'src/common/dtos/delete-operation-response.dto';
 import { CreateUserRequestDto } from '../dtos/create-user-request.dto';
 import { UpdateUserRequestDto } from '../dtos/update-user-request.dto';
@@ -90,6 +91,7 @@ export class UsersController {
   }
 
   @Delete(':id')
+  @Roles('superadmin')
   @ApiOperation({ summary: 'Delete or soft delete a user' })
   @ApiResponse({
     status: 200,

@@ -13,6 +13,7 @@ import {
   Unique,
   UpdateDateColumn,
 } from 'typeorm';
+import { UserRole } from '../../common/@types/user-role.types';
 
 @Entity()
 @Unique(['email', 'team'])
@@ -31,7 +32,7 @@ export class User {
 
   @Column()
   @ApiProperty()
-  role: string;
+  role: UserRole;
 
   @ManyToOne(() => Organization, (organization) => organization.users, {
     nullable: false,
