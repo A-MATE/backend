@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { plainToInstance } from 'class-transformer';
+import { UserAuthDto } from 'src/auth/dtos/user-auth.dto';
 import { PhotoUrls } from 'src/common/@types/logo-urls.type';
 import { UserRole } from 'src/common/@types/user-role.types';
 import { DeleteOperationResponseDto } from 'src/common/dtos/delete-operation-response.dto';
@@ -76,6 +77,27 @@ export class UsersService {
       teamId: user.team.id,
       organizationId: user.organization.id,
     });
+  }
+
+  async getUserByEmailAndTeam(
+    email: string,
+    teamId: string,
+  ): Promise<UserAuthDto> {
+    const user = await this.usersRepository.findOneByEmailAndTeam(
+      email,
+      teamId,
+    );
+
+    if (!user) {
+      throw new NotFoundException(
+        `User with email ${email} and team ID ${teamId} not found`,
+      );
+    }
+    return {
+      ...user,
+      teamId: user.team.id,
+      organizationId: user.organization.id,
+    };
   }
 
   async softDeleteUser(id: string): Promise<DeleteOperationResponseDto> {

@@ -74,8 +74,14 @@ export class UsersRepository {
       where: { id },
       relations: ['team', 'organization'],
     });
-
     return user;
+  }
+
+  async findOneByEmailAndTeam(email: string, teamId: string): Promise<User> {
+    return await this.repository.findOne({
+      where: { email, team: { id: teamId } },
+      relations: ['team', 'organization'],
+    });
   }
 
   async getAllUsers(withDeleted: boolean): Promise<User[]> {
