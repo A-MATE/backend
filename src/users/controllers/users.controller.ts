@@ -7,6 +7,7 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -16,6 +17,8 @@ import {
 } from '@nestjs/swagger';
 
 import { Roles } from 'src/auth/decorators/roles.decorator';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { DeleteOperationResponseDto } from 'src/common/dtos/delete-operation-response.dto';
 import { CreateUserRequestDto } from '../dtos/create-user-request.dto';
 import { UpdateUserRequestDto } from '../dtos/update-user-request.dto';
@@ -26,6 +29,7 @@ import { UsersService } from '../services/users.service';
 @Controller('users')
 @ApiTags('Users API')
 @ApiBearerAuth('JWT')
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
@@ -72,11 +76,17 @@ export class UsersController {
     description: 'List of all users',
     type: [User],
   })
+  @Roles('superadmin')
   async getAllUsers(
     @Query('withSoftDeleted') withSoftDeleted: boolean = false,
   ): Promise<UserResponseDto[]> {
     return await this.usersService.getAllUsers(withSoftDeleted);
   }
+
+  // TODO add get all users by team ID for admins and superadmins
+  // Should be implemented in the module Teams (GET:/tems/users)
+  // TODO add get all users by organization ID for admins and superadmins
+  // Should be implemented in the module Organizations (GET:/organizations/users)
 
   @Get(':id')
   @ApiOperation({ summary: 'Get user by ID' })
@@ -91,21 +101,21 @@ export class UsersController {
   }
 
   @Delete(':id')
-  @Roles('superadmin')
   @ApiOperation({ summary: 'Delete or soft delete a user' })
   @ApiResponse({
     status: 200,
-    description: 'The user has been successfully deleted.',
+    description: 'SUPERADMINS',
     type: DeleteOperationResponseDto,
   })
+  @Roles('superadmin')
   async deleteUser(
     @Param('id') id: string,
     @Query('isHardDelete') isHardDelete?: boolean,
   ): Promise<DeleteOperationResponseDto> {
     if (isHardDelete) {
-      return await this.usersService.softDeleteUser(id);
-    } else {
       return await this.usersService.hardDeleteUser(id);
+    } else {
+      return await this.usersService.softDeleteUser(id);
     }
   }
 }
