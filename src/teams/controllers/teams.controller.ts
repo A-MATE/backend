@@ -7,6 +7,7 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -14,6 +15,9 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { DeleteOperationResponseDto } from '../../common/dtos/delete-operation-response.dto';
 import {
   CreateTeamRequestDto,
@@ -30,6 +34,7 @@ import { TeamsService } from '../services/teams.service';
 @Controller('teams')
 @ApiTags('Teams API')
 @ApiBearerAuth('JWT')
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class TeamsController {
   constructor(private readonly teamsService: TeamsService) {}
 
@@ -37,9 +42,10 @@ export class TeamsController {
   @ApiOperation({ summary: 'Create a new team' })
   @ApiResponse({
     status: 201,
-    description: 'This endpoint creates a new team',
+    description: 'SUPERADMINS',
     type: CreateTeamResponseDto,
   })
+  @Roles('superadmin')
   async createTeam(
     @Body() body: CreateTeamRequestDto,
   ): Promise<CreateTeamResponseDto> {
@@ -58,9 +64,10 @@ export class TeamsController {
   @ApiOperation({ summary: 'Get all teams' })
   @ApiResponse({
     status: 200,
-    description: 'This endpoint returns all teams',
+    description: 'SUPERADMINS',
     type: [GetAllTeamsResponseDto],
   })
+  @Roles('superadmin')
   async getAllTeams(
     @Query('withSoftDeleted') withSoftDeleted?: boolean,
   ): Promise<GetAllTeamsResponseDto[]> {
@@ -85,9 +92,10 @@ export class TeamsController {
   @ApiOperation({ summary: 'Update a team' })
   @ApiResponse({
     status: 200,
-    description: 'This endpoint updates a team',
+    description: 'SUPERADMINS AND ADMINS',
     type: UpdateTeamRequestDto,
   })
+  @Roles('superadmin', 'admin')
   async updateTeam(
     @Body() body: UpdateTeamRequestDto,
     @Param('teamId') teamId: string,
@@ -107,10 +115,10 @@ export class TeamsController {
   @ApiOperation({ summary: 'Delete a team' })
   @ApiResponse({
     status: 200,
-    description:
-      'This endpoint deletes a team. Soft and hard delete options are available',
+    description: 'SUPERADMINS',
     type: DeleteOperationResponseDto,
   })
+  @Roles('superadmin')
   async deleteTeamById(
     @Param('teamId') teamId: string,
     @Query('hard') hard?: boolean,
