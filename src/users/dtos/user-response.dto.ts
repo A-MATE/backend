@@ -1,40 +1,73 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Exclude, Expose } from 'class-transformer';
 import { PhotoUrls } from 'src/common/@types/logo-urls.type';
+import { UserRole } from 'src/common/@types/user-role.types';
+import { Organization } from 'src/organizations/entities/organization.entity';
+import { Team } from 'src/teams/entities/team.entity';
 
 export class UserResponseDto {
   @ApiProperty()
+  @Expose()
   id: string;
 
   @ApiProperty()
+  @Expose()
   email: string;
 
   @ApiProperty()
-  firstName: string;
+  @Expose()
+  role: UserRole;
 
   @ApiProperty()
-  lastName: string;
+  @Expose()
+  teamId: string;
 
   @ApiProperty()
-  birthDate: Date;
+  @Expose()
+  organizationId: string;
 
   @ApiProperty()
-  bio: string;
+  @Expose()
+  firstName?: string;
 
   @ApiProperty()
+  @Expose()
+  lastName?: string;
+
+  @ApiProperty()
+  @Expose()
+  birthDate?: Date;
+
+  @ApiProperty()
+  @Expose()
+  bio?: string;
+
+  @ApiProperty()
+  @Expose()
   avatar?: PhotoUrls;
 
   @ApiProperty()
+  @Expose()
   createdAt: Date;
 
   @ApiProperty()
+  @Expose()
   updatedAt: Date;
 
   @ApiProperty()
-  deletedAt?: Date | null;
-
-  @ApiProperty()
+  @Expose()
   isActive: boolean;
 
   @ApiProperty()
-  teamId: string;
+  @Expose()
+  deletedAt?: Date | null;
+
+  @Exclude()
+  password?: string;
+
+  @Exclude()
+  team?: Team;
+
+  @Exclude()
+  organization?: Organization;
 }

@@ -18,6 +18,7 @@ import {
 import { DeleteOperationResponseDto } from 'src/common/dtos/delete-operation-response.dto';
 import { CreateUserRequestDto } from '../dtos/create-user-request.dto';
 import { UpdateUserRequestDto } from '../dtos/update-user-request.dto';
+import { UserResponseDto } from '../dtos/user-response.dto';
 import { User } from '../entities/user.entity';
 import { UsersService } from '../services/users.service';
 
@@ -34,7 +35,9 @@ export class UsersController {
     description: 'The user has been successfully created.',
     type: User,
   })
-  async createUser(@Body() body: CreateUserRequestDto): Promise<User> {
+  async createUser(
+    @Body() body: CreateUserRequestDto,
+  ): Promise<UserResponseDto> {
     const { email, password, teamId } = body;
     return await this.usersService.createUser(email, password, teamId);
   }
@@ -49,7 +52,7 @@ export class UsersController {
   async updateUser(
     @Param('id') id: string,
     @Body() body: UpdateUserRequestDto,
-  ): Promise<User> {
+  ): Promise<UserResponseDto> {
     const { firstName, lastName, bio, avatar, isActive } = body;
     return await this.usersService.updateUser(
       id,
@@ -70,7 +73,7 @@ export class UsersController {
   })
   async getAllUsers(
     @Query('withSoftDeleted') withSoftDeleted: boolean = false,
-  ): Promise<User[]> {
+  ): Promise<UserResponseDto[]> {
     return await this.usersService.getAllUsers(withSoftDeleted);
   }
 
@@ -81,8 +84,9 @@ export class UsersController {
     description: 'The user with the specified ID',
     type: User,
   })
-  async getUserById(@Param('id') id: string): Promise<User> {
-    return this.usersService.getUserById(id);
+  async getUserById(@Param('id') id: string): Promise<UserResponseDto> {
+    const result = await this.usersService.getUserById(id);
+    return result;
   }
 
   @Delete(':id')
