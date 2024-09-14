@@ -43,7 +43,7 @@ export class UsersRepository {
       email,
       password,
       team,
-      organization: { id: organization.id },
+      organization,
       role,
     });
 
@@ -70,12 +70,19 @@ export class UsersRepository {
   }
 
   async getUserById(id: string): Promise<User> {
-    const user = await this.repository.findOneBy({ id });
+    const user = await this.repository.findOne({
+      where: { id },
+      relations: ['team', 'organization'],
+    });
+
     return user;
   }
 
   async getAllUsers(withDeleted: boolean): Promise<User[]> {
-    return await this.repository.find({ withDeleted });
+    return await this.repository.find({
+      withDeleted,
+      relations: ['team', 'organization'],
+    });
   }
 
   async softDeleteUser(id: string): Promise<DeleteResult> {
