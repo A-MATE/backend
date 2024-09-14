@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { plainToInstance } from 'class-transformer';
 import { PhotoUrls } from 'src/common/@types/logo-urls.type';
 import { OrganizationsRepository } from 'src/organizations/repositories/organizations.repository';
 import { DeleteResult } from 'typeorm';
@@ -40,10 +41,10 @@ export class TeamsService {
       organization,
     );
 
-    return {
+    return plainToInstance(CreateTeamResponseDto, {
       ...team,
-      organizationId: team.organization.id,
-    };
+      organizationId: organization.id,
+    });
   }
 
   async updateTeam(
@@ -74,24 +75,15 @@ export class TeamsService {
   ): Promise<GetAllTeamsResponseDto[]> {
     const teams = await this.teamsRepository.getAllTeams(withSoftDeleted);
     return teams.map((team) => ({
-      id: team.id,
-      name: team.name,
-      description: team.description,
-      logo: team.logo,
-      ageGroup: team.ageGroup,
-      gender: team.gender,
+      ...team,
       organizationId: team.organization.id,
-      createdAt: team.createdAt,
-      updatedAt: team.updatedAt,
-      deletedAt: team.deletedAt,
-      isActive: team.isActive,
     }));
   }
 
   async getTeamById(id: string): Promise<CreateTeamResponseDto> {
     const team = await this.teamsRepository.getTeamById(id);
     if (!team) {
-      throw new NotFoundException(`Team with ID ${id} not found`);
+      throw new NotFoundException(`Team not found for team with ID ${id}`);
     }
 
     return {

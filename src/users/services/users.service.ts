@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { plainToInstance } from 'class-transformer';
 import { PhotoUrls } from 'src/common/@types/logo-urls.type';
 import { UserRole } from 'src/common/@types/user-role.types';
 import { DeleteOperationResponseDto } from 'src/common/dtos/delete-operation-response.dto';
-import { User } from '../entities/user.entity';
+import { UserResponseDto } from '../dtos/user-response.dto';
 import { UsersRepository } from '../repositories/users.repository';
 
 @Injectable()
@@ -14,11 +15,23 @@ export class UsersService {
     email: string,
     password: string,
     teamId: string,
-  ): Promise<User> {
+  ): Promise<UserResponseDto> {
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
     const role = UserRole.USER;
-    return this.usersRepository.createUser(email, hashedPassword, teamId, role);
+
+    const user = await this.usersRepository.createUser(
+      email,
+      hashedPassword,
+      teamId,
+      role,
+    );
+
+    return plainToInstance(UserResponseDto, {
+      ...user,
+      teamId: user.team.id,
+      organizationId: user.team.organization.id,
+    });
   }
 
   async updateUser(
@@ -28,8 +41,8 @@ export class UsersService {
     bio?: string,
     avatar?: PhotoUrls,
     isActive?: boolean,
-  ): Promise<User> {
-    return this.usersRepository.updateUser(
+  ): Promise<UserResponseDto> {
+    const user = await this.usersRepository.updateUser(
       id,
       firstName,
       lastName,
@@ -37,14 +50,32 @@ export class UsersService {
       avatar,
       isActive,
     );
+
+    return plainToInstance(UserResponseDto, {
+      ...user,
+      teamId: user.team.id,
+      organizationId: user.team.organization.id,
+    });
   }
 
-  async getAllUsers(withDeleted: boolean): Promise<User[]> {
-    return this.usersRepository.getAllUsers(withDeleted);
+  async getAllUsers(withDeleted: boolean): Promise<UserResponseDto[]> {
+    const users = await this.usersRepository.getAllUsers(withDeleted);
+    return users.map((user) =>
+      plainToInstance(UserResponseDto, {
+        ...user,
+        teamId: user.team.id,
+        organizationId: user.organization.id,
+      }),
+    );
   }
 
-  async getUserById(id: string): Promise<User> {
-    return this.usersRepository.getUserById(id);
+  async getUserById(id: string): Promise<UserResponseDto> {
+    const user = await this.usersRepository.getUserById(id);
+    return plainToInstance(UserResponseDto, {
+      ...user,
+      teamId: user.team.id,
+      organizationId: user.organization.id,
+    });
   }
 
   async softDeleteUser(id: string): Promise<DeleteOperationResponseDto> {
