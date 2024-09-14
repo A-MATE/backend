@@ -4,8 +4,8 @@ import { SigninResponseDto } from '../dtos/signin-reponse.dto';
 import { SignInRequestDto } from '../dtos/signin-request.dto';
 import { AuthService } from '../services/auth.service';
 
-@ApiTags('auth')
 @Controller('auth')
+@ApiTags('Authentication API')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
