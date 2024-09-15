@@ -23,6 +23,8 @@ export class AuthController {
     type: UnauthorizedException,
   })
   async signIn(@Body() body: SignInRequestDto): Promise<SigninResponseDto> {
+    console.log('body', body);
+
     const user = await this.authService.validateUser(
       body.email,
       body.password,
