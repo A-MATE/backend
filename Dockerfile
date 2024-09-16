@@ -1,34 +1,36 @@
-# Étape 1: Construire l'application
-FROM node:18 AS builder
+# Étape 1 : Construction de l'application
+FROM node:18-alpine AS builder
 
+# Définir le répertoire de travail
 WORKDIR /app
 
-# Copier les fichiers package.json, yarn.lock, et le fichier d'environnement
-ARG ENV=development
+# Copier les fichiers package.json et yarn.lock
 COPY package.json yarn.lock ./
-COPY .env.${ENV} ./.env
 
 # Installer les dépendances
 RUN yarn install
 
-# Copier tous les fichiers du projet dans le conteneur
+# Copier le reste des fichiers du projet
 COPY . .
 
-# Construire l'application
+# Compiler le projet NestJS
 RUN yarn build
 
-# Étape 2: Exécuter l'application
+# Étape 2 : Construction de l'image finale
 FROM node:18-alpine
 
+# Définir le répertoire de travail
 WORKDIR /app
 
-# Copier les fichiers nécessaires de l'étape de construction
+# Copier les fichiers nécessaires depuis l'étape de construction
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/package.json /app/yarn.lock ./
-COPY --from=builder /app/.env ./
 
+# Installer uniquement les dépendances de production
 RUN yarn install --production
 
-EXPOSE 3000
+# Exposer le port de l'application (changez le port si nécessaire)
+EXPOSE 80
 
-CMD ["node", "dist/main"]
+# Ajouter le script d'entrypoint
+ENTRYPOINT ["node", "dist/main"]
