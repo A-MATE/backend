@@ -46,7 +46,7 @@ export class OrganizationsController {
     description: 'SUPERADMINS',
     type: CreateOrganizationResponseDto,
   })
-  @Roles('superadmin')
+  // @Roles('superadmin')
   async createOrganization(
     @Body() body: CreateOrganizationRequestDto,
   ): Promise<CreateOrganizationResponseDto> {
