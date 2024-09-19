@@ -35,7 +35,7 @@ import { UsersModule } from './users/users.module';
         password: configService.get('DATABASE_PASSWORD'),
         database: configService.get('DATABASE_NAME'),
         entities: [Team, Organization, User],
-        synchronize: ['local'].includes(configService.get('NODE_ENV')),
+        synchronize: true,
         ssl: {
           rejectUnauthorized: false,
         },
