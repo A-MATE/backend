@@ -14,7 +14,7 @@ import {
 import { TeamAgeCategory } from '../@types/team-age-category.types';
 import { TeamGender } from '../@types/team-gender.types';
 
-@Entity()
+@Entity('teams')
 export class Team {
   @PrimaryGeneratedColumn('uuid')
   id: string;
