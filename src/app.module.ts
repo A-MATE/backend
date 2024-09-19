@@ -35,7 +35,9 @@ import { UsersModule } from './users/users.module';
         password: configService.get('DATABASE_PASSWORD'),
         database: configService.get('DATABASE_NAME'),
         entities: [Team, Organization, User],
+        migrations: ['dist/database/migrations/*.js'],
         synchronize: true,
+        migrationsRun: true,
         ssl: {
           rejectUnauthorized: false,
         },

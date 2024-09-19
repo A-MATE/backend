@@ -12,7 +12,7 @@ import {
 } from 'typeorm';
 import { OrganizationType } from '../@types/organization.types';
 
-@Entity()
+@Entity('organizations')
 export class Organization {
   @PrimaryGeneratedColumn('uuid')
   id: string;

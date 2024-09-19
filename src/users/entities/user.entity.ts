@@ -15,7 +15,7 @@ import {
 } from 'typeorm';
 import { UserRole } from '../../common/@types/user-role.types';
 
-@Entity()
+@Entity('users')
 @Unique(['email', 'team'])
 export class User {
   @PrimaryGeneratedColumn('uuid')
