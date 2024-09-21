@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
@@ -9,6 +9,7 @@ import { Organization } from './organizations/entities/organization.entity';
 import { OrganizationsModule } from './organizations/organizations.module';
 import { PlayersModule } from './players/players.module';
 
+import { RequestContextMiddleware } from './middlewares/request-context.middleware';
 import { RolesModule } from './roles/roles.module';
 import { SponsorsModule } from './sponsors/sponsors.module';
 import { StaffMembersModule } from './staff-members/staff-members.module';
@@ -38,9 +39,10 @@ import { UsersModule } from './users/users.module';
         migrations: ['dist/database/migrations/*.js'],
         synchronize: true,
         migrationsRun: true,
-        ssl: {
-          rejectUnauthorized: false,
-        },
+        ssl:
+          process.env.NODE_ENV === 'local'
+            ? false
+            : { rejectUnauthorized: false },
       }),
     }),
     AuthModule,
@@ -56,4 +58,8 @@ import { UsersModule } from './users/users.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(RequestContextMiddleware).forRoutes('*');
+  }
+}
