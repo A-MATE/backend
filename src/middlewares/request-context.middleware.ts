@@ -4,6 +4,7 @@ import {
   NestMiddleware,
 } from '@nestjs/common';
 import { NextFunction, Request, Response } from 'express';
+import { Platform } from 'src/common/@types/platform.type';
 
 @Injectable()
 export class RequestContextMiddleware implements NestMiddleware {
@@ -17,6 +18,10 @@ export class RequestContextMiddleware implements NestMiddleware {
 
     if (!platform) {
       throw new BadRequestException('Platform is missing');
+    }
+
+    if (!Object.values(Platform).includes(platform as Platform)) {
+      throw new BadRequestException(`Invalid platform: ${platform}`);
     }
 
     req['clientId'] = clientId;

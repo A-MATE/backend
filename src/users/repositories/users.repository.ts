@@ -81,11 +81,17 @@ export class UsersRepository {
     return user;
   }
 
-  async findOneByEmailAndTeam(email: string, teamId: string): Promise<User> {
-    return await this.repository.findOne({
-      where: { email, team: { id: teamId } },
-      relations: ['team', 'organization'],
-    });
+  async findOneByEmailAndTeam(
+    email: string,
+    teamId: string,
+  ): Promise<User | null> {
+    return await this.repository
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.team', 'team')
+      .leftJoinAndSelect('user.organization', 'organization')
+      .where('user.email = :email', { email })
+      .andWhere('team.id = :teamId', { teamId })
+      .getOne();
   }
 
   async getAllUsers(withDeleted: boolean): Promise<User[]> {
