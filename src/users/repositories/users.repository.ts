@@ -74,6 +74,10 @@ export class UsersRepository {
       where: { id },
       relations: ['team', 'organization'],
     });
+    if (!user) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+
     return user;
   }
 
