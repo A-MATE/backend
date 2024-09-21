@@ -59,6 +59,8 @@ export class UsersController {
     @Body() body: UpdateUserRequestDto,
   ): Promise<UserResponseDto> {
     const { firstName, lastName, bio, avatar, isActive } = body;
+    console.log('body', body);
+
     return await this.usersService.updateUser(
       id,
       firstName,
@@ -95,7 +97,10 @@ export class UsersController {
     description: 'The user with the specified ID',
     type: User,
   })
+  @Roles('superadmin')
   async getUserById(@Param('id') id: string): Promise<UserResponseDto> {
+    console.log('id', id);
+
     const result = await this.usersService.getUserById(id);
     return result;
   }
