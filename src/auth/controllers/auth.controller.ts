@@ -1,14 +1,16 @@
+import { Body, Controller, Post, UnauthorizedException } from '@nestjs/common';
 import {
-  Body,
-  Controller,
-  Post,
-  Req,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Request } from 'express';
-import { CustomHeaders } from 'src/common/@types/headers.type';
-import { Platform } from 'src/common/@types/platform.type';
+  ApiBody,
+  ApiHeader,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+
+import { CustomHeaders } from 'src/common/@types/headers.enum';
+import { RequestOrigin } from 'src/common/@types/request-origin.enum';
+import { RequestHeaders } from 'src/common/decorators/request-headers.decorator';
+import { HeadersDTO } from 'src/common/dtos/headers.dto';
 import { SigninResponseDto } from '../dtos/signin-reponse.dto';
 import { SignInRequestDto } from '../dtos/signin-request.dto';
 import { AuthService } from '../services/auth.service';
@@ -20,6 +22,16 @@ export class AuthController {
 
   @Post('signin')
   @ApiOperation({ summary: 'Sign in a user' })
+  @ApiHeader({
+    name: 'x-client-id',
+    description: 'Team ID or Organization ID',
+    required: true,
+  })
+  @ApiHeader({
+    name: 'x-origin',
+    description: `Request origin. Valid values: ${Object.values(RequestOrigin).join(', ')}`,
+    required: true,
+  })
   @ApiBody({ type: SignInRequestDto })
   @ApiResponse({
     status: 200,
@@ -32,14 +44,15 @@ export class AuthController {
     type: UnauthorizedException,
   })
   async signIn(
+    @RequestHeaders({ dtoClass: HeadersDTO, omitClientId: true })
+    headers: HeadersDTO,
     @Body() body: SignInRequestDto,
-    @Req() req: Request,
   ): Promise<SigninResponseDto> {
-    const clientId = req[CustomHeaders.CLIENT_ID];
-    const platform = req[CustomHeaders.PLATFORM] as Platform;
+    const origin = headers[CustomHeaders.ORIGIN];
+    const clientId = headers[CustomHeaders.CLIENT_ID];
 
-    switch (platform) {
-      case Platform.MOBILE_APP:
+    switch (origin) {
+      case RequestOrigin.MOBILE_APP:
         const mobileUser = await this.authService.validateUser(
           body.email,
           body.password,
@@ -50,7 +63,7 @@ export class AuthController {
         }
         return await this.authService.login(mobileUser);
 
-      case Platform.BACK_OFFICE_CLIENT:
+      case RequestOrigin.BACK_OFFICE_CLIENT:
         const backOfficeClientUser = await this.authService.validateUser(
           body.email,
           body.password,
@@ -61,7 +74,7 @@ export class AuthController {
         }
         return await this.authService.login(backOfficeClientUser);
 
-      case Platform.BACK_OFFICE_INTERNAL:
+      case RequestOrigin.BACK_OFFICE_INTERNAL:
         const backOfficeInternalUser = await this.authService.validateUser(
           body.email,
           body.password,

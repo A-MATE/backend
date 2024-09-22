@@ -8,11 +8,13 @@ import {
   Entity,
   OneToMany,
   PrimaryGeneratedColumn,
+  Unique,
   UpdateDateColumn,
 } from 'typeorm';
 import { OrganizationType } from '../@types/organization.types';
 
 @Entity('organizations')
+@Unique(['name'])
 export class Organization {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -26,7 +28,7 @@ export class Organization {
   })
   type: OrganizationType;
 
-  @Column('jsonb')
+  @Column({ type: 'jsonb', nullable: true })
   logo: PhotoUrls;
 
   @OneToMany(() => Team, (team) => team.organization)

@@ -3,7 +3,7 @@ import * as bcrypt from 'bcrypt';
 import { plainToInstance } from 'class-transformer';
 import { UserAuthDto } from 'src/auth/dtos/user-auth.dto';
 import { PhotoUrls } from 'src/common/@types/logo-urls.type';
-import { UserRole } from 'src/common/@types/user-role.types';
+import { UserRole } from 'src/common/@types/user-role.enum';
 import { DeleteOperationResponseDto } from 'src/common/dtos/delete-operation-response.dto';
 import { UserResponseDto } from '../dtos/user-response.dto';
 import { UsersRepository } from '../repositories/users.repository';
