@@ -13,13 +13,8 @@ export class OrganizationsService {
   async createOrganization(
     name: string,
     type: OrganizationType,
-    logo?: PhotoUrls,
   ): Promise<CreateOrganizationResponseDto> {
-    return await this.organizationsRepository.createOrganization(
-      name,
-      type,
-      logo,
-    );
+    return await this.organizationsRepository.createOrganization(name, type);
   }
 
   async updateOrganization(
