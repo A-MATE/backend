@@ -1,7 +1,8 @@
 import { Controller, Get, Param, Post } from '@nestjs/common';
 
 import { ApiTags } from '@nestjs/swagger';
-import { UserRole } from 'src/common/@types/user-role.types';
+
+import { UserRole } from 'src/common/@types/user-role.enum';
 import { RolesService } from '../services/roles.service';
 
 @Controller('roles')

@@ -13,7 +13,7 @@ import {
   Unique,
   UpdateDateColumn,
 } from 'typeorm';
-import { UserRole } from '../../common/@types/user-role.types';
+import { UserRole } from '../../common/@types/user-role.enum';
 
 @Entity('users')
 @Unique(['email', 'team'])

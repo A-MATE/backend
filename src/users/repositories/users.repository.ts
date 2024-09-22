@@ -1,7 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PhotoUrls } from 'src/common/@types/logo-urls.type';
-import { UserRole } from 'src/common/@types/user-role.types';
+
+import { UserRole } from 'src/common/@types/user-role.enum';
 import { Team } from 'src/teams/entities/team.entity';
 import { DeleteResult, Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
