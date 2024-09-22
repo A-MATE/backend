@@ -16,12 +16,10 @@ export class OrganizationsRepository {
   async createOrganization(
     name: string,
     type: OrganizationType,
-    logo?: PhotoUrls,
   ): Promise<CreateOrganizationResponseDto> {
     const newOrganization = this.repository.create({
       name,
       type,
-      logo,
     });
     return this.repository.save(newOrganization);
   }
