@@ -3,11 +3,10 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { GlobalExceptionFilter } from './common/filters/global-exception.filter';
-import { RequestContextMiddleware } from './middlewares/request-context.middleware';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.use(new RequestContextMiddleware().use);
+
   app.useGlobalFilters(new GlobalExceptionFilter());
   app.setGlobalPrefix('api');
   app.enableVersioning({

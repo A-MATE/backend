@@ -50,8 +50,8 @@ export class OrganizationsController {
   async createOrganization(
     @Body() body: CreateOrganizationRequestDto,
   ): Promise<CreateOrganizationResponseDto> {
-    const { name, type, logo } = body;
-    return await this.organizationsService.createOrganization(name, type, logo);
+    const { name, type } = body;
+    return await this.organizationsService.createOrganization(name, type);
   }
 
   @Patch(':id')

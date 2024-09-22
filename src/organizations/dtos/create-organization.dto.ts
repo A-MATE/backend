@@ -13,9 +13,6 @@ export class CreateOrganizationRequestDto {
     example: 'Company',
   })
   type: OrganizationType;
-
-  @ApiProperty()
-  logo?: PhotoUrls;
 }
 
 export class CreateOrganizationResponseDto {

@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
 import { PhotoUrls } from 'src/common/@types/logo-urls.type';
-import { UserRole } from 'src/common/@types/user-role.types';
+import { UserRole } from 'src/common/@types/user-role.enum';
+
 import { Organization } from 'src/organizations/entities/organization.entity';
 import { Team } from 'src/teams/entities/team.entity';
 
