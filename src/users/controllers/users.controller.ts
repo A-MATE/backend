@@ -15,10 +15,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-
-import { Roles } from 'src/auth/decorators/roles.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { DeleteOperationResponseDto } from 'src/common/dtos/delete-operation-response.dto';
 import { CreateUserRequestDto } from '../dtos/create-user-request.dto';
 import { UpdateUserRequestDto } from '../dtos/update-user-request.dto';
@@ -29,7 +26,7 @@ import { UsersService } from '../services/users.service';
 @Controller('users')
 @ApiTags('Users API')
 @ApiBearerAuth('JWT')
-@UseGuards(JwtAuthGuard, RolesGuard)
+@UseGuards(JwtAuthGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
@@ -78,7 +75,6 @@ export class UsersController {
     description: 'List of all users',
     type: [User],
   })
-  @Roles('superadmin')
   async getAllUsers(
     @Query('withSoftDeleted') withSoftDeleted: boolean = false,
   ): Promise<UserResponseDto[]> {
@@ -97,7 +93,6 @@ export class UsersController {
     description: 'The user with the specified ID',
     type: User,
   })
-  @Roles('superadmin')
   async getUserById(@Param('id') id: string): Promise<UserResponseDto> {
     console.log('id', id);
 
@@ -112,7 +107,6 @@ export class UsersController {
     description: 'SUPERADMINS',
     type: DeleteOperationResponseDto,
   })
-  @Roles('superadmin')
   async deleteUser(
     @Param('id') id: string,
     @Query('isHardDelete') isHardDelete?: boolean,

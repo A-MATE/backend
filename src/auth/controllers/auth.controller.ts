@@ -1,4 +1,10 @@
-import { Body, Controller, Post, UnauthorizedException } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Req,
+  UnauthorizedException,
+} from '@nestjs/common';
 import {
   ApiBody,
   ApiHeader,
@@ -6,11 +12,8 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-
-import { CustomHeaders } from 'src/common/@types/headers.enum';
+import { Request } from 'express';
 import { RequestOrigin } from 'src/common/@types/request-origin.enum';
-import { RequestHeaders } from 'src/common/decorators/request-headers.decorator';
-import { HeadersDTO } from 'src/common/dtos/headers.dto';
 import { SigninResponseDto } from '../dtos/signin-reponse.dto';
 import { SignInRequestDto } from '../dtos/signin-request.dto';
 import { AuthService } from '../services/auth.service';
@@ -24,7 +27,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Sign in a user' })
   @ApiHeader({
     name: 'x-client-id',
-    description: 'Team ID or Organization ID',
+    description: 'Client ID (can be TeamID or OrganizationID)',
     required: true,
   })
   @ApiHeader({
@@ -41,22 +44,21 @@ export class AuthController {
   @ApiResponse({
     status: 401,
     description: 'Unauthorized',
-    type: UnauthorizedException,
   })
   async signIn(
-    @RequestHeaders({ dtoClass: HeadersDTO, omitClientId: true })
-    headers: HeadersDTO,
+    @Req() req: Request,
     @Body() body: SignInRequestDto,
   ): Promise<SigninResponseDto> {
-    const origin = headers[CustomHeaders.ORIGIN];
-    const clientId = headers[CustomHeaders.CLIENT_ID];
+    const origin = req['origin'];
 
     switch (origin) {
       case RequestOrigin.MOBILE_APP:
+        const teamId = req['teamId'];
+
         const mobileUser = await this.authService.validateUser(
           body.email,
           body.password,
-          clientId,
+          teamId,
         );
         if (!mobileUser) {
           throw new UnauthorizedException();
@@ -64,26 +66,17 @@ export class AuthController {
         return await this.authService.login(mobileUser);
 
       case RequestOrigin.BACK_OFFICE_CLIENT:
+        const organizationId = req['organizationId'];
+
         const backOfficeClientUser = await this.authService.validateUser(
           body.email,
           body.password,
-          clientId,
+          organizationId,
         );
         if (!backOfficeClientUser) {
           throw new UnauthorizedException();
         }
         return await this.authService.login(backOfficeClientUser);
-
-      case RequestOrigin.BACK_OFFICE_INTERNAL:
-        const backOfficeInternalUser = await this.authService.validateUser(
-          body.email,
-          body.password,
-          clientId,
-        );
-        if (!backOfficeInternalUser) {
-          throw new UnauthorizedException();
-        }
-        return await this.authService.login(backOfficeInternalUser);
 
       default:
         throw new UnauthorizedException('Invalid platform');
