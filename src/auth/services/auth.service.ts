@@ -21,15 +21,11 @@ export class AuthService {
     const user = await this.usersService.getUserByEmailAndTeam(email, teamId);
 
     if (user && (await bcrypt.compare(password, user.password))) {
-      console.log('User found', user);
-
       const result = user;
       return result;
     }
     throw new UnauthorizedException('Invalid credentials');
   }
-
-  // TODO create a login service and logic for admin
 
   async login(user: UserResponseDto): Promise<SigninResponseDto> {
     const payload = {
