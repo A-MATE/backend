@@ -15,16 +15,13 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { DeleteOperationResponseDto } from 'src/common/dtos/delete-operation-response.dto';
 
 import {
   CreateOrganizationRequestDto,
   CreateOrganizationResponseDto,
 } from '../dtos/create-organization.dto';
-
-import { Roles } from 'src/auth/decorators/roles.decorator';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { RolesGuard } from 'src/auth/guards/roles.guard';
-import { DeleteOperationResponseDto } from 'src/common/dtos/delete-operation-response.dto';
 import { GetOrganizationResponseDto } from '../dtos/get-organization.dto';
 import {
   UpdateOrganizationRequestDto,
@@ -35,7 +32,7 @@ import { OrganizationsService } from '../services/organizations.service';
 @Controller('organizations')
 @ApiTags('Organizations API')
 @ApiBearerAuth('JWT')
-@UseGuards(JwtAuthGuard, RolesGuard)
+@UseGuards(JwtAuthGuard)
 export class OrganizationsController {
   constructor(private readonly organizationsService: OrganizationsService) {}
 
@@ -43,12 +40,11 @@ export class OrganizationsController {
   @ApiOperation({ summary: 'Create a new organization' })
   @ApiResponse({
     status: 201,
-    description: 'SUPERADMINS',
     type: CreateOrganizationResponseDto,
   })
-  @Roles('superadmin')
   async createOrganization(
-    @Body() body: CreateOrganizationRequestDto,
+    @Body()
+    body: CreateOrganizationRequestDto,
   ): Promise<CreateOrganizationResponseDto> {
     const { name, type } = body;
     return await this.organizationsService.createOrganization(name, type);
@@ -58,10 +54,8 @@ export class OrganizationsController {
   @ApiOperation({ summary: 'Update an organization' })
   @ApiResponse({
     status: 200,
-    description: 'SUPERADMINS AND ADMINS',
     type: UpdateOrganizationResponseDto,
   })
-  @Roles('superadmin', 'admin')
   async updateOrganization(
     @Param('id') id: string,
     @Body() body: UpdateOrganizationRequestDto,
@@ -80,10 +74,8 @@ export class OrganizationsController {
   @ApiOperation({ summary: 'Get an organization by ID' })
   @ApiResponse({
     status: 200,
-    description: 'SUPERADMINS AND ADMINS',
     type: GetOrganizationResponseDto,
   })
-  @Roles('superadmin', 'admin')
   async getOrganizationById(
     @Param('id') id: string,
   ): Promise<GetOrganizationResponseDto> {
@@ -94,10 +86,8 @@ export class OrganizationsController {
   @ApiOperation({ summary: 'Get all organizations' })
   @ApiResponse({
     status: 200,
-    description: 'SUPERADMINS',
     type: [CreateOrganizationResponseDto],
   })
-  @Roles('superadmin')
   async getAllOrganizations(
     @Query('withSoftDeleted') withSoftDeleted: boolean = false,
   ): Promise<CreateOrganizationResponseDto[]> {
@@ -108,10 +98,8 @@ export class OrganizationsController {
   @ApiOperation({ summary: 'Delete an organization (soft or hard)' })
   @ApiResponse({
     status: 200,
-    description: 'SUPERADMINS',
     type: DeleteOperationResponseDto,
   })
-  @Roles('superadmin')
   async deleteOrganization(
     @Param('id') id: string,
     @Query('isHardDelete') isHardDelete?: boolean,
