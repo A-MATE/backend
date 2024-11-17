@@ -1,27 +1,46 @@
-import { Team } from 'src/teams/entities/team.entity';
-import {
-  Column,
-  Entity,
-  JoinTable,
-  ManyToMany,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Match {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Column({ nullable: false })
+  teamId: string;
+
+  @Column({ nullable: false })
+  organizationId: string;
+
   @Column()
   date: Date;
 
   @Column({ nullable: true })
-  location: string;
+  locationId: string;
+
+  @Column({ nullable: false })
+  homeTeamId: string;
+
+  @Column({ nullable: false })
+  awayTeamId: string;
 
   @Column({ nullable: true })
-  score: string;
+  homeTeamScore: number;
 
-  @ManyToMany(() => Team)
-  @JoinTable()
-  teams: Team[];
+  @Column({ nullable: true })
+  awayTeamScore: number;
+
+  @Column({ nullable: false })
+  status: string;
+
+  @Column({ nullable: false })
+  sport: string;
+
+  @Column({ nullable: false })
+  createdAt: Date;
+
+  @Column({ nullable: true })
+  updatedAt: Date;
+
+  @Column({ nullable: true })
+  deletedAt: Date;
 }
