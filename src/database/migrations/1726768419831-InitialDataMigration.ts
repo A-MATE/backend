@@ -250,7 +250,7 @@ export class InitialDataMigration1726768419831 implements MigrationInterface {
           VALUES (
             '6b1acd70-53d0-4897-bea0-f7eb0a5c7e41',
             'a.mate.tech@gmail.com',
-            '$2b$10$7ls5zSLSKb2w3PfFENfz/O8J27oCWNNPvPVUcPbwfbXAlK/3FBTmy',
+            '$2a$10$nLt5z0aFSh0BujucihtvH.SD1I/ZWj3CjOaD3PSAtW6A1vdJsGhES',
             'superadmin',
             '1ca50e17-7e06-47a2-a7a8-2e4207d7a36f',
             'e1cf9fda-cab0-4109-a3d9-8adc190ad7e2',
