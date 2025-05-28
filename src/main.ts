@@ -10,6 +10,17 @@ async function bootstrap() {
     logger: new Logger(),
   });
 
+  app.enableCors({
+    origin: ['http://localhost:3000'],
+    credentials: true,
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'x-client-id',
+      'x-origin',
+    ],
+  });
+
   app.useGlobalInterceptors(new LoggingInterceptor());
 
   app.useGlobalFilters(new GlobalExceptionFilter());
