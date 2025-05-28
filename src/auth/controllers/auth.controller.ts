@@ -98,6 +98,27 @@ export class AuthController {
         );
         return await this.authService.login(backOfficeClientUser);
 
+      case RequestOrigin.BACK_OFFICE_INTERNAL:
+        const aMateId = req.headers['x-client-id'];
+        this.logger.log(`A-MATE ID from headers: ${aMateId}`);
+
+        const backOfficeInternalUser = await this.authService.validateUser(
+          body.email,
+          body.password,
+          aMateId as string,
+        );
+
+        if (!backOfficeInternalUser) {
+          this.logger.warn(
+            `Failed to validate back office internal user with email: ${body.email}`,
+          );
+          throw new UnauthorizedException();
+        }
+        this.logger.log(
+          `Successfully validated back office internal user: ${backOfficeInternalUser.id}`,
+        );
+        return await this.authService.login(backOfficeInternalUser);
+
       default:
         this.logger.error(`Invalid platform origin: ${origin}`);
         throw new UnauthorizedException('Invalid platform');
