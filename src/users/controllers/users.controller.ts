@@ -82,7 +82,7 @@ export class UsersController {
   }
 
   // TODO add get all users by team ID for admins and superadmins
-  // Should be implemented in the module Teams (GET:/tems/users)
+  // Should be implemented in the module Teams (GET:/teams/users)
   // TODO add get all users by organization ID for admins and superadmins
   // Should be implemented in the module Organizations (GET:/organizations/users)
 
