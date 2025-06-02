@@ -1,73 +1,107 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# A-Mate Backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A NestJS backend application with PostgreSQL database, JWT authentication, and Docker support.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 🛠 Tech Stack
 
-## Description
+- **Framework**: NestJS
+- **Database**: PostgreSQL
+- **ORM**: TypeORM
+- **Authentication**: JWT with Passport
+- **Containerization**: Docker & Docker Compose
+- **Package Manager**: Yarn
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## 📋 Prerequisites
 
-## Installation
+Before running this project, make sure you have installed:
+
+- [Node.js](https://nodejs.org/) (v18 or higher)
+- [Yarn](https://yarnpkg.com/)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+
+## 🚀 Getting Started
+
+### 1. Clone the repository
 
 ```bash
-$ yarn install
+git clone <repository-url>
+cd backend
 ```
 
-## Running the app
+### 2. Install dependencies
 
 ```bash
-# development
-$ yarn run start
-
-# watch mode
-$ yarn run start:dev
-
-# production mode
-$ yarn run start:prod
+yarn install
 ```
 
-## Test
+### 3. Environment Configuration
+
+Create or update the `.env.local` file with the following configuration:
+
+```env
+DATABASE_HOST=localhost
+DATABASE_PORT=5432
+DATABASE_USER=amate_db_admin
+DATABASE_PASSWORD=amate_db_password
+DATABASE_NAME=amate_db_local
+NODE_ENV=local
+JWT_SECRET=a-mate-jwt-secret-local
+PORT=3001
+```
+
+### 4. Start the PostgreSQL Database
+
+Start only the PostgreSQL container:
 
 ```bash
-# unit tests
-$ yarn run test
-
-# e2e tests
-$ yarn run test:e2e
-
-# test coverage
-$ yarn run test:cov
+docker-compose up -d postgres
 ```
 
-## Support
+### 5. Run the Application
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+Start the NestJS application in development mode:
 
-## Stay in touch
+```bash
+yarn start:local
+```
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+The application will be available at `http://localhost:3001`
 
-## License
+## 🐳 Docker Setup (Alternative)
 
-Nest is [MIT licensed](LICENSE).
+If you prefer to run everything in Docker:
+
+### 1. Build the Docker image
+
+```bash
+docker build -t a-mate-dev:v0.1 .
+```
+
+### 2. Start all services
+
+```bash
+docker-compose up -d
+```
+
+This will start both PostgreSQL and the NestJS application.
+
+## 📝 Available Scripts
+
+- `yarn start:local` - Start the app in local development mode with hot reload
+- `yarn start:dev` - Start the app in development mode
+- `yarn start:prod` - Start the app in production mode
+- `yarn build` - Build the application
+- `yarn test` - Run unit tests
+- `yarn test:e2e` - Run end-to-end tests
+- `yarn lint` - Run ESLint
+- `yarn format` - Format code with Prettier
+
+## 🗄 Database
+
+The application uses PostgreSQL with TypeORM. The database configuration includes:
+
+- **Host**: localhost (when running locally)
+- **Port**: 5432
+- **Database**: amate_db_local
+- **User**: amate_db_admin
+- **Password**: amate_db_password
