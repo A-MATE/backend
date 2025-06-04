@@ -46,8 +46,13 @@ export class OrganizationsController {
     @Body()
     body: CreateOrganizationRequestDto,
   ): Promise<CreateOrganizationResponseDto> {
-    const { name, type } = body;
-    return await this.organizationsService.createOrganization(name, type);
+    const { name, type, address, logo } = body;
+    return await this.organizationsService.createOrganization(
+      name,
+      type,
+      address,
+      logo,
+    );
   }
 
   @Patch(':id')

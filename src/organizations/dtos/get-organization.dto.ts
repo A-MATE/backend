@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { PhotoUrls } from 'src/common/@types/logo-urls.type';
 import { OrganizationType } from '../@types/organization.types';
 
 export class GetOrganizationResponseDto {
@@ -12,13 +11,13 @@ export class GetOrganizationResponseDto {
   @ApiProperty({
     enum: OrganizationType,
     description:
-      'The type of organization (e.g., Company, Nonprofit, Government)',
+      'The type of organization (e.g., Company, Nonprofit, School...)',
     example: 'Company',
   })
   type: OrganizationType;
 
-  @ApiProperty()
-  logo?: PhotoUrls;
+  @ApiProperty({ required: false })
+  logo?: string;
 
   @ApiProperty({
     description: 'The date and time the organization was created',

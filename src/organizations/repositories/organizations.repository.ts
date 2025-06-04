@@ -1,62 +1,82 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { PhotoUrls } from 'src/common/@types/logo-urls.type';
-import { DeleteResult, Repository } from 'typeorm';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { OrganizationType } from '../@types/organization.types';
-import { CreateOrganizationResponseDto } from '../dtos/create-organization.dto';
-import { Organization } from '../entities/organization.entity';
 
 @Injectable()
 export class OrganizationsRepository {
-  constructor(
-    @InjectRepository(Organization)
-    private readonly repository: Repository<Organization>,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async createOrganization(
     name: string,
     type: OrganizationType,
-  ): Promise<CreateOrganizationResponseDto> {
-    const newOrganization = this.repository.create({
-      name,
-      type,
+    address: string,
+    logo?: string,
+  ) {
+    return this.prisma.organization.create({
+      data: {
+        name,
+        type,
+        address,
+        ...(logo && { logo }),
+      },
     });
-    return this.repository.save(newOrganization);
   }
 
   async updateOrganization(
     id: string,
     name?: string,
     type?: OrganizationType,
-    logo?: PhotoUrls,
+    logo?: string,
     isActive?: boolean,
-  ): Promise<Organization> {
-    const organization = await this.repository.findOneBy({ id });
+  ) {
+    const existing = await this.prisma.organization.findUnique({
+      where: { id },
+    });
+    if (!existing)
+      throw new NotFoundException(`Organization with ID ${id} not found`);
 
-    if (name) organization.name = name;
-    if (type) organization.type = type;
-    if (logo) organization.logo = logo;
-    if (isActive !== undefined) organization.isActive = isActive;
-
-    return this.repository.save(organization);
+    return this.prisma.organization.update({
+      where: { id },
+      data: {
+        ...(name && { name }),
+        ...(type && { type }),
+        ...(logo && { logo }),
+        ...(isActive !== undefined && { isActive }),
+      },
+    });
   }
 
-  async getOrganizationById(id: string): Promise<Organization> {
-    return await this.repository.findOne({ where: { id } });
+  async getOrganizationById(id: string) {
+    const org = await this.prisma.organization.findUnique({
+      where: { id },
+      include: {
+        contact: true,
+      },
+    });
+    if (!org)
+      throw new NotFoundException(`Organization with ID ${id} not found`);
+    return org;
   }
 
-  async getAllOrganizations(withDeleted: boolean): Promise<Organization[]> {
-    if (withDeleted) {
-      return this.repository.find({ withDeleted });
-    }
-    return this.repository.find();
+  async getAllOrganizations(withDeleted: boolean) {
+    return this.prisma.organization.findMany({
+      where: withDeleted ? {} : { deletedAt: null },
+      include: {
+        contact: true,
+      },
+    });
   }
 
-  async softDeleteOrganization(id: string): Promise<DeleteResult> {
-    return await this.repository.softDelete(id);
+  async softDeleteOrganization(id: string) {
+    return this.prisma.organization.update({
+      where: { id },
+      data: { deletedAt: new Date() },
+    });
   }
 
-  async hardDeleteOrganization(id: string): Promise<DeleteResult> {
-    return this.repository.delete(id);
+  async hardDeleteOrganization(id: string) {
+    return this.prisma.organization.delete({
+      where: { id },
+    });
   }
 }

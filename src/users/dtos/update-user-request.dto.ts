@@ -1,52 +1,52 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsBoolean,
-  IsDate,
+  IsDateString,
   IsEmail,
-  IsNotEmpty,
   IsOptional,
   IsString,
   MinLength,
 } from 'class-validator';
-import { PhotoUrls } from 'src/common/@types/logo-urls.type';
 
 export class UpdateUserRequestDto {
-  @ApiProperty()
+  @ApiProperty({ required: false })
+  @IsOptional()
   @IsEmail()
-  email: string;
+  email?: string;
 
-  @ApiProperty()
-  @IsNotEmpty()
+  @ApiProperty({ required: false })
+  @IsOptional()
   @IsString()
-  firstName: string;
+  firstName?: string;
 
-  @ApiProperty()
-  @IsNotEmpty()
+  @ApiProperty({ required: false })
+  @IsOptional()
   @IsString()
-  lastName: string;
+  lastName?: string;
 
-  @ApiProperty()
-  @IsDate()
-  birthDate: Date;
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsDateString()
+  birthDate?: string;
 
-  @ApiProperty()
-  @IsNotEmpty()
+  @ApiProperty({ required: false })
+  @IsOptional()
   @MinLength(8)
   @IsString()
-  password: string;
+  password?: string;
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
   @IsOptional()
   @IsString()
   bio?: string;
 
-  @ApiProperty({
-    required: false,
-  })
+  @ApiProperty({ required: false })
   @IsOptional()
-  avatar?: PhotoUrls;
+  @IsString()
+  avatar?: string;
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
+  @IsOptional()
   @IsBoolean()
-  isActive: boolean;
+  isActive?: boolean;
 }

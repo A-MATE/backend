@@ -1,9 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { PhotoUrls } from 'src/common/@types/logo-urls.type';
 import { OrganizationType } from '../@types/organization.types';
 
 export class UpdateOrganizationRequestDto {
-  @ApiProperty()
+  @ApiProperty({ required: false })
   name?: string;
 
   @ApiProperty({
@@ -11,13 +10,14 @@ export class UpdateOrganizationRequestDto {
     description:
       'The type of organization (e.g., Company, Nonprofit, Government)',
     example: 'Company',
+    required: false,
   })
   type?: OrganizationType;
 
-  @ApiProperty()
-  logo?: PhotoUrls;
+  @ApiProperty({ required: false })
+  logo?: string;
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
   isActive?: boolean;
 }
 
@@ -36,8 +36,8 @@ export class UpdateOrganizationResponseDto {
   })
   type: OrganizationType;
 
-  @ApiProperty()
-  logo?: PhotoUrls;
+  @ApiProperty({ required: false })
+  logo?: string;
 
   @ApiProperty({
     description: 'The date and time the organization was created',

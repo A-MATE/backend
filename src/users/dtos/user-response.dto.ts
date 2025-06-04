@@ -45,7 +45,7 @@ export class UserResponseDto {
 
   @ApiProperty()
   @Expose()
-  avatar?: PhotoUrls;
+  avatar?: string;
 
   @ApiProperty()
   @Expose()

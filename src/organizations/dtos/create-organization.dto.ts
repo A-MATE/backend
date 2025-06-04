@@ -1,18 +1,19 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { PhotoUrls } from 'src/common/@types/logo-urls.type';
 import { OrganizationType } from '../@types/organization.types';
+import { IsOptional, IsString } from 'class-validator';
 
 export class CreateOrganizationRequestDto {
   @ApiProperty()
   name: string;
 
-  @ApiProperty({
-    enum: OrganizationType,
-    description:
-      'The type of organization (e.g., Company, Nonprofit, Government)',
-    example: 'Company',
-  })
+  @ApiProperty({ enum: OrganizationType })
   type: OrganizationType;
+
+  @ApiProperty()
+  address: string;
+
+  @ApiProperty({ required: false })
+  logo?: string;
 }
 
 export class CreateOrganizationResponseDto {
@@ -22,41 +23,24 @@ export class CreateOrganizationResponseDto {
   @ApiProperty()
   name: string;
 
-  @ApiProperty({
-    enum: OrganizationType,
-    description:
-      'The type of organization (e.g., Company, Nonprofit, Government)',
-    example: 'Company',
-  })
+  @ApiProperty({ enum: OrganizationType })
   type: OrganizationType;
 
   @ApiProperty()
-  logo?: PhotoUrls;
+  address: string;
 
-  @ApiProperty({
-    description: 'The date and time the organization was created',
-    example: '2022-01-01T00:00:00.000Z',
-  })
+  @ApiProperty({ required: false })
+  logo?: string;
+
+  @ApiProperty()
   createdAt: Date;
 
-  @ApiProperty({
-    description:
-      'The date and time the organization was deleted (if applicable)',
-    example: '2022-01-01T00:00:00.000Z',
-    required: false,
-  })
+  @ApiProperty({ required: false })
   deletedAt?: Date | null;
 
-  @ApiProperty({
-    description: 'A boolean indicating whether the organization is active',
-    example: true,
-  })
+  @ApiProperty()
   isActive: boolean;
 
-  @ApiProperty({
-    description: 'The date and time the organization was last updated',
-    example: '2022-01-01T00:00:00.000Z',
-    required: false,
-  })
+  @ApiProperty({ required: false })
   updatedAt: Date | null;
 }

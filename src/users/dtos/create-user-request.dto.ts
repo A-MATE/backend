@@ -9,7 +9,6 @@ import {
   IsUUID,
   MinLength,
 } from 'class-validator';
-import { PhotoUrls } from 'src/common/@types/logo-urls.type';
 
 export class CreateUserRequestDto {
   @ApiProperty()
@@ -37,15 +36,6 @@ export class CreateUserRequestDto {
   password: string;
 
   @ApiProperty()
-  @IsOptional()
-  @IsString()
-  bio?: string;
-
-  @ApiProperty({ required: false })
-  @IsOptional()
-  avatar?: PhotoUrls;
-
-  @ApiProperty()
   @IsBoolean()
   isActive: boolean;
 
@@ -53,4 +43,14 @@ export class CreateUserRequestDto {
   @IsUUID()
   @IsNotEmpty()
   teamId: string;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  bio?: string;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  avatar?: string;
 }

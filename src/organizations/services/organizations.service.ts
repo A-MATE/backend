@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { PhotoUrls } from 'src/common/@types/logo-urls.type';
 import { OrganizationType } from '../@types/organization.types';
 import { CreateOrganizationResponseDto } from '../dtos/create-organization.dto';
 import { OrganizationsRepository } from '../repositories/organizations.repository';
@@ -13,15 +12,22 @@ export class OrganizationsService {
   async createOrganization(
     name: string,
     type: OrganizationType,
+    address: string,
+    logo?: string,
   ): Promise<CreateOrganizationResponseDto> {
-    return await this.organizationsRepository.createOrganization(name, type);
+    return await this.organizationsRepository.createOrganization(
+      name,
+      type,
+      address,
+      logo,
+    );
   }
 
   async updateOrganization(
     id: string,
     name?: string,
     type?: OrganizationType,
-    logo?: PhotoUrls,
+    logo?: string,
     isActive?: boolean,
   ) {
     return await this.organizationsRepository.updateOrganization(

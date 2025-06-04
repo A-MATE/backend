@@ -20,7 +20,6 @@ import { DeleteOperationResponseDto } from 'src/common/dtos/delete-operation-res
 import { CreateUserRequestDto } from '../dtos/create-user-request.dto';
 import { UpdateUserRequestDto } from '../dtos/update-user-request.dto';
 import { UserResponseDto } from '../dtos/user-response.dto';
-import { User } from '../entities/user.entity';
 import { UsersService } from '../services/users.service';
 
 @Controller('users')
@@ -35,7 +34,7 @@ export class UsersController {
   @ApiResponse({
     status: 201,
     description: 'The user has been successfully created.',
-    type: User,
+    type: UserResponseDto,
   })
   async createUser(
     @Body() body: CreateUserRequestDto,
@@ -49,7 +48,7 @@ export class UsersController {
   @ApiResponse({
     status: 200,
     description: 'The user has been successfully updated.',
-    type: User,
+    type: UserResponseDto,
   })
   async updateUser(
     @Param('id') id: string,
@@ -73,7 +72,7 @@ export class UsersController {
   @ApiResponse({
     status: 200,
     description: 'List of all users',
-    type: [User],
+    type: [UserResponseDto],
   })
   async getAllUsers(
     @Query('withSoftDeleted') withSoftDeleted: boolean = false,
@@ -91,7 +90,7 @@ export class UsersController {
   @ApiResponse({
     status: 200,
     description: 'The user with the specified ID',
-    type: User,
+    type: UserResponseDto,
   })
   async getUserById(@Param('id') id: string): Promise<UserResponseDto> {
     console.log('id', id);

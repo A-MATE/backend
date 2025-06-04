@@ -16,6 +16,12 @@ export class UsersService {
     email: string,
     password: string,
     teamId: string,
+    firstName?: string,
+    lastName?: string,
+    birthDate?: string,
+    bio?: string,
+    avatar?: string,
+    isActive: boolean = true,
   ): Promise<UserResponseDto> {
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
@@ -26,12 +32,18 @@ export class UsersService {
       hashedPassword,
       teamId,
       role,
+      firstName,
+      lastName,
+      birthDate ? new Date(birthDate) : undefined,
+      bio,
+      avatar,
+      isActive,
     );
 
     return plainToInstance(UserResponseDto, {
       ...user,
-      teamId: user.team.id,
-      organizationId: user.team.organization.id,
+      teamId: user.team?.id ?? null,
+      organizationId: user.organization?.id ?? null,
     });
   }
 
