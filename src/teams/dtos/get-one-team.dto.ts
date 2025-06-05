@@ -1,12 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Exclude, Expose } from 'class-transformer';
-import { PhotoUrls } from 'src/common/@types/logo-urls.type';
-import { Organization } from 'src/organizations/entities/organization.entity';
+import { Expose } from 'class-transformer';
+import { TeamAgeCategory } from '../@types/team-age-category.types';
+import { TeamGender } from '../@types/team-gender.types';
 
 export class GetTeamByIdResponseDto {
   @ApiProperty({
     description: 'The unique identifier of the team',
-    example: 1,
+    example: 'cf32cabe-3b62-4c90-9b1a-d32ec84deabc',
   })
   @Expose()
   id: string;
@@ -34,28 +34,31 @@ export class GetTeamByIdResponseDto {
   description?: string;
 
   @ApiProperty({
-    description: 'Array of URLs for team logo',
-    example: ['http://example.com/logo1.png', 'http://example.com/logo2.png'],
+    description: 'URL of the team logo',
+    example: 'https://example.com/logo.png',
     required: false,
   })
   @Expose()
-  logo?: PhotoUrls;
+  logo?: string;
 
   @ApiProperty({
+    enum: TeamAgeCategory,
     description: 'The age group of the team (e.g., U18, U21)',
     example: 'U18',
     required: false,
   })
   @Expose()
-  ageGroup?: string;
+  ageGroup?: TeamAgeCategory;
 
   @ApiProperty({
+    enum: TeamGender,
     description: 'The gender of the team (e.g., Male, Female, Mixed)',
-    example: 'Male',
+    example: 'MALE',
     required: false,
   })
   @Expose()
-  gender?: string;
+  gender?: TeamGender;
+
   @ApiProperty({
     description: 'The date and time the team was created',
     example: '2022-01-01T00:00:00.000Z',
@@ -65,7 +68,7 @@ export class GetTeamByIdResponseDto {
 
   @ApiProperty({
     description: 'The date and time the team was deleted (if applicable)',
-    example: '2022-01-01T00:00:00.000Z',
+    example: null,
     required: false,
   })
   @Expose()
@@ -85,7 +88,4 @@ export class GetTeamByIdResponseDto {
   })
   @Expose()
   isActive: boolean;
-
-  @Exclude()
-  organization?: Organization;
 }

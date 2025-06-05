@@ -1,136 +1,102 @@
+// create-team.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
-import { IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator';
-import { PhotoUrls } from 'src/common/@types/logo-urls.type';
-import { Organization } from 'src/organizations/entities/organization.entity';
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsUUID,
+} from 'class-validator';
+
 import { TeamAgeCategory } from '../@types/team-age-category.types';
 import { TeamGender } from '../@types/team-gender.types';
 
 export class CreateTeamRequestDto {
-  @ApiProperty({
-    description: 'The name of the team',
-  })
+  @ApiProperty({ description: 'The name of the team' })
   @IsNotEmpty()
   @IsString()
   name: string;
 
-  @ApiProperty({
-    description: 'The unique identifier of the organization',
-  })
+  @ApiProperty({ description: 'The unique identifier of the organization' })
   @IsNotEmpty()
   @IsUUID()
   organizationId: string;
 
-  @ApiProperty({
-    description: 'A brief description or biography of the team',
-    required: false,
-  })
+  @ApiProperty({ description: 'Team description', required: false })
   @IsOptional()
   @IsString()
   description?: string;
 
-  @ApiProperty({
-    description: 'Array of URLs for team logo',
-    required: false,
-  })
+  @ApiProperty({ description: 'Logo URL', required: false })
   @IsOptional()
-  logo?: PhotoUrls;
+  @IsString()
+  logo?: string;
 
   @ApiProperty({
     enum: TeamAgeCategory,
-    description: 'The age group of the team (e.g., U18, U21)',
+    description: 'The age group of the team',
     required: false,
   })
   @IsOptional()
-  @IsString()
+  @IsEnum(TeamAgeCategory)
   ageGroup?: TeamAgeCategory;
 
   @ApiProperty({
     enum: TeamGender,
-    description: 'The gender of the team (e.g., Male, Female, Mixed)',
+    description: 'The gender of the team',
     required: false,
   })
   @IsOptional()
-  @IsString()
+  @IsEnum(TeamGender)
   gender?: TeamGender;
 }
 
 export class CreateTeamResponseDto {
-  @ApiProperty({
-    description: 'The unique identifier of the team',
-    example: 1,
-  })
+  @ApiProperty({ description: 'Team ID', example: 'uuid' })
   @Expose()
   id: string;
 
-  @ApiProperty({
-    description: 'The name of the team',
-    example: 'U18 Soccer Team',
-  })
+  @ApiProperty({ description: 'Team name' })
   @Expose()
   name: string;
 
-  @ApiProperty({
-    description: 'The unique identifier of the organization owning the team',
-    example: 'a1b2c3d4-e5f6-7g8h-9i0j-k1l2m3n4o5p6',
-  })
+  @ApiProperty({ description: 'Owning organization ID' })
   @Expose()
   organizationId: string;
 
-  @ApiProperty({
-    description: 'A brief description or biography of the team',
-    required: false,
-  })
+  @ApiProperty({ description: 'Team description', required: false })
   @Expose()
   description?: string;
 
-  @ApiProperty({
-    description: 'Array of URLs for team logo',
-    required: false,
-  })
+  @ApiProperty({ description: 'Logo URL', required: false })
   @Expose()
-  logo?: PhotoUrls;
+  logo?: string;
 
-  @ApiProperty({
-    description: 'The age group of the team (e.g., U18, U21)',
-    required: false,
-  })
+  @ApiProperty({ enum: TeamAgeCategory, required: false })
   @Expose()
   ageGroup?: TeamAgeCategory;
 
-  @ApiProperty({
-    description: 'The gender of the team (e.g., Male, Female, Mixed)',
-    required: false,
-  })
+  @ApiProperty({ enum: TeamGender, required: false })
   @Expose()
   gender?: TeamGender;
 
-  @ApiProperty({
-    description: 'The date and time the team was created',
-  })
+  @ApiProperty({ description: 'Created at' })
   @Expose()
   createdAt: Date;
 
-  @ApiProperty({
-    description: 'The date and time the team was deleted (if applicable)',
-    required: false,
-  })
+  @ApiProperty({ description: 'Deleted at', required: false })
   @Expose()
   deletedAt?: Date | null;
 
-  @ApiProperty({
-    description: 'A boolean indicating whether the team is active',
-  })
+  @ApiProperty({ description: 'Is active' })
   @Expose()
   isActive: boolean;
 
-  @ApiProperty({
-    description: 'The date and time the team was last updated',
-    required: false,
-  })
+  @ApiProperty({ description: 'Updated at', required: false })
   @Expose()
   updatedAt: Date | null;
 
   @Exclude()
-  organization?: Organization;
+  organization?: any;
 }

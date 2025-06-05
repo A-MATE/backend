@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserRole } from 'src/common/@types/user-role.enum';
-import { PhotoUrls } from 'src/common/@types/logo-urls.type';
 
 @Injectable()
 export class UsersRepository {
@@ -56,7 +55,7 @@ export class UsersRepository {
     firstName?: string,
     lastName?: string,
     bio?: string,
-    avatar?: PhotoUrls,
+    avatar?: string,
     isActive?: boolean,
   ) {
     return await this.prisma.user.update({

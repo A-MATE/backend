@@ -1,12 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { plainToInstance } from 'class-transformer';
-import { UserAuthDto } from 'src/auth/dtos/user-auth.dto';
-import { PhotoUrls } from 'src/common/@types/logo-urls.type';
 import { UserRole } from 'src/common/@types/user-role.enum';
-import { DeleteOperationResponseDto } from 'src/common/dtos/delete-operation-response.dto';
+
 import { UserResponseDto } from '../dtos/user-response.dto';
 import { UsersRepository } from '../repositories/users.repository';
+import { UserWithPassword } from 'src/auth/@types/user-with-password';
 
 @Injectable()
 export class UsersService {
@@ -52,7 +51,7 @@ export class UsersService {
     firstName?: string,
     lastName?: string,
     bio?: string,
-    avatar?: PhotoUrls,
+    avatar?: string,
     isActive?: boolean,
   ): Promise<UserResponseDto> {
     const user = await this.usersRepository.updateUser(
@@ -75,7 +74,7 @@ export class UsersService {
 
   async getAllUsers(withDeleted: boolean): Promise<UserResponseDto[]> {
     const users = await this.usersRepository.getAllUsers(withDeleted);
-    return users.map((user) =>
+    return users.map(user =>
       plainToInstance(UserResponseDto, {
         ...user,
         teamId: user.team.id,
@@ -96,7 +95,7 @@ export class UsersService {
   async getUserByEmailAndTeam(
     email: string,
     teamId: string,
-  ): Promise<UserAuthDto> {
+  ): Promise<UserWithPassword> {
     const user = await this.usersRepository.findOneByEmailAndTeam(
       email,
       teamId,
@@ -114,11 +113,11 @@ export class UsersService {
     };
   }
 
-  async softDeleteUser(id: string): Promise<DeleteOperationResponseDto> {
+  async softDeleteUser(id: string) {
     return this.usersRepository.softDeleteUser(id);
   }
 
-  async hardDeleteUser(id: string): Promise<DeleteOperationResponseDto> {
+  async hardDeleteUser(id: string) {
     return this.usersRepository.hardDeleteUser(id);
   }
 }

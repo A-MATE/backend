@@ -1,25 +1,28 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { PrismaService } from 'src/prisma/prisma.service';
 import {
   CreateMatchRequestDto,
   CreateMatchResponseDto,
 } from '../dtos/create-match.dto';
-import { Match } from '../entities/match.entity';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class MatchesRepository {
-  constructor(
-    @InjectRepository(Match)
-    private readonly repository: Repository<Match>,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async create(match: CreateMatchRequestDto): Promise<CreateMatchResponseDto> {
-    const newMatch = this.repository.create(match);
-    return await this.repository.save(newMatch);
+    const newMatch = await this.prisma.match.create({
+      data: match,
+    });
+
+    return plainToInstance(CreateMatchResponseDto, newMatch);
   }
 
   async listByTeamId(teamId: string): Promise<CreateMatchResponseDto[]> {
-    return await this.repository.find({ where: { teamId } });
+    const matches = await this.prisma.match.findMany({
+      where: { teamId },
+    });
+
+    return matches.map(match => plainToInstance(CreateMatchResponseDto, match));
   }
 }

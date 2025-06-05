@@ -21,9 +21,16 @@ export class AuthService {
     const user = await this.usersService.getUserByEmailAndTeam(email, teamId);
 
     if (user && (await bcrypt.compare(password, user.password))) {
-      const result = user;
-      return result;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { password: _, ...rest } = user; // exclude password
+
+      return {
+        ...rest,
+        teamId: user.team.id,
+        organizationId: user.organization.id,
+      };
     }
+
     throw new UnauthorizedException('Invalid credentials');
   }
 

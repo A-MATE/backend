@@ -1,74 +1,75 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-
-import { PhotoUrls } from 'src/common/@types/logo-urls.type';
-import { Organization } from 'src/organizations/entities/organization.entity';
-import { DeleteResult, Repository } from 'typeorm';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { TeamAgeCategory } from '../@types/team-age-category.types';
 import { TeamGender } from '../@types/team-gender.types';
-import { Team } from '../entities/team.entity';
 
 @Injectable()
 export class TeamsRepository {
-  constructor(
-    @InjectRepository(Team)
-    private readonly repository: Repository<Team>,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async createTeam(
     name: string,
     description: string,
-    logo: PhotoUrls,
+    logo: string,
     ageGroup: TeamAgeCategory,
     gender: TeamGender,
-    organization: Organization,
-  ): Promise<Team> {
-    const newTeam = this.repository.create({
-      name,
-      description,
-      logo,
-      ageGroup,
-      gender,
-      organization,
+    organizationId: string,
+  ) {
+    return this.prisma.team.create({
+      data: {
+        name,
+        description,
+        logo,
+        ageGroup,
+        gender,
+        organizationId,
+      },
     });
-    return this.repository.save(newTeam);
   }
 
   async updateTeam(
     id: string,
-    name: string,
-    description: string,
-    logo: PhotoUrls,
-    ageGroup: TeamAgeCategory,
-    gender: TeamGender,
+    name?: string,
+    description?: string,
+    logo?: string,
+    ageGroup?: TeamAgeCategory,
+    gender?: TeamGender,
   ) {
-    const updatedTeam = await this.repository.findOneBy({ id });
+    const existing = await this.prisma.team.findUnique({ where: { id } });
+    if (!existing) throw new NotFoundException(`Team with ID ${id} not found`);
 
-    if (name) updatedTeam.name = name;
-    if (description) updatedTeam.description = description;
-    if (logo) updatedTeam.logo = logo;
-    if (ageGroup) updatedTeam.ageGroup = ageGroup;
-    if (gender) updatedTeam.gender = gender;
-
-    return this.repository.save(updatedTeam);
+    return this.prisma.team.update({
+      where: { id },
+      data: {
+        ...(name && { name }),
+        ...(description && { description }),
+        ...(logo && { logo }),
+        ...(ageGroup && { ageGroup }),
+        ...(gender && { gender }),
+      },
+    });
   }
 
-  async getAllTeams(withDeleted: boolean): Promise<Team[]> {
-    if (withDeleted) {
-      return this.repository.find({ withDeleted });
-    }
-    return this.repository.find();
+  async getAllTeams(withDeleted = false) {
+    return this.prisma.team.findMany({
+      where: withDeleted ? {} : { deletedAt: null },
+    });
   }
 
-  async getTeamById(id: string): Promise<Team> {
-    return this.repository.findOneBy({ id });
+  async getTeamById(id: string) {
+    const team = await this.prisma.team.findUnique({ where: { id } });
+    if (!team) throw new NotFoundException(`Team with ID ${id} not found`);
+    return team;
   }
 
-  async hardDeleteTeamById(id: string): Promise<DeleteResult> {
-    return this.repository.delete({ id });
+  async hardDeleteTeamById(id: string) {
+    return this.prisma.team.delete({ where: { id } });
   }
 
-  async softDeleteTeamById(id: string): Promise<DeleteResult> {
-    return this.repository.softDelete({ id });
+  async softDeleteTeamById(id: string) {
+    return this.prisma.team.update({
+      where: { id },
+      data: { deletedAt: new Date() },
+    });
   }
 }

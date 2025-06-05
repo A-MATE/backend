@@ -16,7 +16,6 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { DeleteOperationResponseDto } from 'src/common/dtos/delete-operation-response.dto';
 
 import {
   CreateOrganizationRequestDto,
@@ -103,12 +102,12 @@ export class OrganizationsController {
   @ApiOperation({ summary: 'Delete an organization (soft or hard)' })
   @ApiResponse({
     status: 200,
-    type: DeleteOperationResponseDto,
+    type: GetOrganizationResponseDto,
   })
   async deleteOrganization(
     @Param('id') id: string,
     @Query('isHardDelete') isHardDelete?: boolean,
-  ): Promise<DeleteOperationResponseDto> {
+  ): Promise<GetOrganizationResponseDto> {
     if (isHardDelete) {
       return await this.organizationsService.hardDeleteOrganization(id);
     } else {

@@ -7,7 +7,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { QueryFailedError } from 'typeorm';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
@@ -21,12 +21,18 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
     let message: string | Record<string, any> = 'Internal server error';
 
-    if (exception instanceof QueryFailedError) {
-      status = HttpStatus.BAD_REQUEST;
-      if (exception.driverError.code === '23505') {
-        message = 'Duplicate entry: a unique constraint was violated';
-      } else {
-        message = exception.message;
+    if (exception instanceof PrismaClientKnownRequestError) {
+      switch (exception.code) {
+        case 'P2002':
+          status = HttpStatus.BAD_REQUEST;
+          message = 'Duplicate entry: a unique constraint was violated';
+          break;
+        case 'P2025':
+          status = HttpStatus.NOT_FOUND;
+          message = 'Record not found';
+          break;
+        default:
+          message = exception.message;
       }
     } else if (exception instanceof HttpException) {
       status = exception.getStatus();
@@ -42,7 +48,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       statusCode: status,
       timestamp: new Date().toISOString(),
       path: request.url,
-      message: message,
+      message,
     });
   }
 }

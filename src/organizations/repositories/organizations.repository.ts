@@ -13,12 +13,7 @@ export class OrganizationsRepository {
     logo?: string,
   ) {
     return this.prisma.organization.create({
-      data: {
-        name,
-        type,
-        address,
-        ...(logo && { logo }),
-      },
+      data: { name, type, address, ...(logo && { logo }) },
     });
   }
 
@@ -49,9 +44,7 @@ export class OrganizationsRepository {
   async getOrganizationById(id: string) {
     const org = await this.prisma.organization.findUnique({
       where: { id },
-      include: {
-        contact: true,
-      },
+      include: { contact: true },
     });
     if (!org)
       throw new NotFoundException(`Organization with ID ${id} not found`);
@@ -61,9 +54,7 @@ export class OrganizationsRepository {
   async getAllOrganizations(withDeleted: boolean) {
     return this.prisma.organization.findMany({
       where: withDeleted ? {} : { deletedAt: null },
-      include: {
-        contact: true,
-      },
+      include: { contact: true },
     });
   }
 
@@ -75,8 +66,6 @@ export class OrganizationsRepository {
   }
 
   async hardDeleteOrganization(id: string) {
-    return this.prisma.organization.delete({
-      where: { id },
-    });
+    return this.prisma.organization.delete({ where: { id } });
   }
 }

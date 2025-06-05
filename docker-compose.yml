@@ -15,7 +15,7 @@ services:
   nestjs-backend:
     image: a-mate-dev:v0.1
     env_file:
-      - .env.local
+      - .env
     environment:
       DATABASE_HOST: postgres
     depends_on:

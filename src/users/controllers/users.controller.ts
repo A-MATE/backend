@@ -16,7 +16,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { DeleteOperationResponseDto } from 'src/common/dtos/delete-operation-response.dto';
+
 import { CreateUserRequestDto } from '../dtos/create-user-request.dto';
 import { UpdateUserRequestDto } from '../dtos/update-user-request.dto';
 import { UserResponseDto } from '../dtos/user-response.dto';
@@ -104,12 +104,12 @@ export class UsersController {
   @ApiResponse({
     status: 200,
     description: 'SUPERADMINS',
-    type: DeleteOperationResponseDto,
+    type: UserResponseDto,
   })
   async deleteUser(
     @Param('id') id: string,
     @Query('isHardDelete') isHardDelete?: boolean,
-  ): Promise<DeleteOperationResponseDto> {
+  ): Promise<UserResponseDto> {
     if (isHardDelete) {
       return await this.usersService.hardDeleteUser(id);
     } else {
