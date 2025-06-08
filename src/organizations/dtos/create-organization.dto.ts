@@ -1,10 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { PhotoUrls } from 'src/common/@types/logo-urls.type';
+import { ContactDto, ContactRequestDto } from './contact.dto';
 import { OrganizationType } from '../@types/organization.types';
+import { PhotoUrls } from 'src/common/@types/logo-urls.type';
 
 export class CreateOrganizationRequestDto {
-  @ApiProperty()
-  name: string;
+  @ApiProperty({
+    description: 'The name of the organization',
+    example: 'Tech Innovations Inc.',
+  })
+  name: string; // Name of the organization
 
   @ApiProperty({
     enum: OrganizationType,
@@ -12,7 +16,23 @@ export class CreateOrganizationRequestDto {
       'The type of organization (e.g., Company, Nonprofit, Government)',
     example: 'Company',
   })
-  type: OrganizationType;
+  type: OrganizationType; // Type of the organization
+
+  @ApiProperty()
+  logo?: PhotoUrls; // Logo of the organization
+
+  @ApiProperty({
+    description: 'The address of the organization',
+    example: '123 Main St, Anytown, USA',
+    required: false,
+  })
+  address?: string; // Address of the organization
+  @ApiProperty({
+    description: 'Contact information for the organization',
+    type: ContactRequestDto,
+    required: false,
+  })
+  contact?: ContactRequestDto; // Contact information for the organization
 }
 
 export class CreateOrganizationResponseDto {
@@ -32,6 +52,12 @@ export class CreateOrganizationResponseDto {
 
   @ApiProperty()
   logo?: PhotoUrls;
+
+  @ApiProperty()
+  address?: string;
+
+  @ApiProperty({ type: ContactDto })
+  contact: ContactDto;
 
   @ApiProperty({
     description: 'The date and time the organization was created',

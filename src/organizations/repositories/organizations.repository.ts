@@ -3,8 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { PhotoUrls } from 'src/common/@types/logo-urls.type';
 import { DeleteResult, Repository } from 'typeorm';
 import { OrganizationType } from '../@types/organization.types';
-import { CreateOrganizationResponseDto } from '../dtos/create-organization.dto';
 import { Organization } from '../entities/organization.entity';
+import { ContactRequestDto } from '../dtos/contact.dto';
+import { UpdateOrganizationResponseDto } from '../dtos/update-organization.dto';
 
 @Injectable()
 export class OrganizationsRepository {
@@ -12,16 +13,8 @@ export class OrganizationsRepository {
     @InjectRepository(Organization)
     private readonly repository: Repository<Organization>,
   ) {}
-
-  async createOrganization(
-    name: string,
-    type: OrganizationType,
-  ): Promise<CreateOrganizationResponseDto> {
-    const newOrganization = this.repository.create({
-      name,
-      type,
-    });
-    return this.repository.save(newOrganization);
+  async createOrganization(organization: Organization): Promise<Organization> {
+    return await this.repository.save(organization);
   }
 
   async updateOrganization(
@@ -29,14 +22,24 @@ export class OrganizationsRepository {
     name?: string,
     type?: OrganizationType,
     logo?: PhotoUrls,
+    address?: string,
+    contact?: ContactRequestDto,
     isActive?: boolean,
-  ): Promise<Organization> {
+  ): Promise<UpdateOrganizationResponseDto> {
     const organization = await this.repository.findOneBy({ id });
 
     if (name) organization.name = name;
     if (type) organization.type = type;
     if (logo) organization.logo = logo;
     if (isActive !== undefined) organization.isActive = isActive;
+    if (address) organization.address = address;
+    if (contact)
+      organization.contact = {
+        firstName: contact.firstName,
+        lastName: contact.lastName,
+        email: contact.email,
+        phone: contact.phone,
+      };
 
     return this.repository.save(organization);
   }
