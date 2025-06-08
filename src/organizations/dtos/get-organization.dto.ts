@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { PhotoUrls } from 'src/common/@types/logo-urls.type';
 import { OrganizationType } from '../@types/organization.types';
+import { ContactDto } from './contact.dto';
 
 export class GetOrganizationResponseDto {
   @ApiProperty()
@@ -19,6 +20,9 @@ export class GetOrganizationResponseDto {
 
   @ApiProperty()
   logo?: PhotoUrls;
+
+  @ApiProperty({ type: ContactDto })
+  contact: ContactDto;
 
   @ApiProperty({
     description: 'The date and time the organization was created',

@@ -13,6 +13,13 @@ import {
 } from 'typeorm';
 import { OrganizationType } from '../@types/organization.types';
 
+export class Contact {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone?: string;
+}
+
 @Entity('organizations')
 @Unique(['name'])
 export class Organization {
@@ -30,6 +37,12 @@ export class Organization {
 
   @Column({ type: 'jsonb', nullable: true })
   logo: PhotoUrls;
+
+  @Column({ nullable: true })
+  address: string;
+
+  @Column({ type: 'jsonb', nullable: true })
+  contact: Contact;
 
   @OneToMany(() => Team, (team) => team.organization)
   teams: Team[];

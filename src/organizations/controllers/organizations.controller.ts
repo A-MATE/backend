@@ -43,11 +43,9 @@ export class OrganizationsController {
     type: CreateOrganizationResponseDto,
   })
   async createOrganization(
-    @Body()
-    body: CreateOrganizationRequestDto,
+    @Body() body: CreateOrganizationRequestDto,
   ): Promise<CreateOrganizationResponseDto> {
-    const { name, type } = body;
-    return await this.organizationsService.createOrganization(name, type);
+    return await this.organizationsService.createOrganization(body);
   }
 
   @Patch(':id')
@@ -60,12 +58,14 @@ export class OrganizationsController {
     @Param('id') id: string,
     @Body() body: UpdateOrganizationRequestDto,
   ): Promise<UpdateOrganizationResponseDto> {
-    const { name, type, logo, isActive } = body;
+    const { name, type, logo, address, contact, isActive } = body;
     return await this.organizationsService.updateOrganization(
       id,
       name,
       type,
       logo,
+      address,
+      contact,
       isActive,
     );
   }
