@@ -8,7 +8,7 @@ export class CreateOrganizationRequestDto {
     description: 'The name of the organization',
     example: 'Tech Innovations Inc.',
   })
-  name: string; // Name of the organization
+  name: string;
 
   @ApiProperty({
     enum: OrganizationType,
@@ -16,23 +16,23 @@ export class CreateOrganizationRequestDto {
       'The type of organization (e.g., Company, Nonprofit, Government)',
     example: 'Company',
   })
-  type: OrganizationType; // Type of the organization
+  type: OrganizationType;
 
   @ApiProperty()
-  logo?: PhotoUrls; // Logo of the organization
+  logo?: PhotoUrls;
 
   @ApiProperty({
     description: 'The address of the organization',
     example: '123 Main St, Anytown, USA',
     required: false,
   })
-  address?: string; // Address of the organization
+  address?: string;
   @ApiProperty({
     description: 'Contact information for the organization',
     type: ContactRequestDto,
     required: false,
   })
-  contact?: ContactRequestDto; // Contact information for the organization
+  contact?: ContactRequestDto;
 }
 
 export class CreateOrganizationResponseDto {
