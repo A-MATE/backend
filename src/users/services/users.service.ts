@@ -52,8 +52,6 @@ export class UsersService {
       isActive,
     );
 
-    console.log('updated user : ', user);
-
     return plainToInstance(UserResponseDto, {
       ...user,
       teamId: user.team.id,
