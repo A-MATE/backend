@@ -8,6 +8,7 @@ import { TeamGender } from '../@types/team-gender.types';
 import { CreateTeamResponseDto } from '../dtos/create-team.dto';
 import { GetAllTeamsResponseDto } from '../dtos/get-all-teams.dto';
 import { TeamsRepository } from '../repositories/teams.repository';
+import { GetTeamByIdResponseDto } from '../dtos/get-one-team.dto';
 
 @Injectable()
 export class TeamsService {
@@ -74,22 +75,25 @@ export class TeamsService {
     withSoftDeleted: boolean = false,
   ): Promise<GetAllTeamsResponseDto[]> {
     const teams = await this.teamsRepository.getAllTeams(withSoftDeleted);
-    return teams.map((team) => ({
-      ...team,
-      organizationId: team.organization.id,
-    }));
+
+    return teams.map((team) =>
+      plainToInstance(GetAllTeamsResponseDto, {
+        ...team,
+        organizationId: team.organization.id,
+      }),
+    );
   }
 
-  async getTeamById(id: string): Promise<CreateTeamResponseDto> {
+  async getTeamById(id: string): Promise<GetTeamByIdResponseDto> {
     const team = await this.teamsRepository.getTeamById(id);
     if (!team) {
       throw new NotFoundException(`Team not found for team with ID ${id}`);
     }
 
-    return {
+    return plainToInstance(GetTeamByIdResponseDto, {
       ...team,
       organizationId: team.organization.id,
-    };
+    });
   }
 
   async hardDeleteTeamById(id: string): Promise<DeleteResult> {

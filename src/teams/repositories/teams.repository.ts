@@ -55,13 +55,16 @@ export class TeamsRepository {
 
   async getAllTeams(withDeleted: boolean): Promise<Team[]> {
     if (withDeleted) {
-      return this.repository.find({ withDeleted });
+      return this.repository.find({ withDeleted, relations: ['organization'] });
     }
     return this.repository.find();
   }
 
   async getTeamById(id: string): Promise<Team> {
-    return this.repository.findOneBy({ id });
+    return this.repository.findOne({
+      where: { id },
+      relations: ['organization'],
+    });
   }
 
   async hardDeleteTeamById(id: string): Promise<DeleteResult> {

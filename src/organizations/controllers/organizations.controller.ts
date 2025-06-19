@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -48,7 +49,7 @@ export class OrganizationsController {
     return await this.organizationsService.createOrganization(body);
   }
 
-  @Patch(':id')
+  @Put(':id')
   @ApiOperation({ summary: 'Update an organization' })
   @ApiResponse({
     status: 200,
