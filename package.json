@@ -23,7 +23,10 @@
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
     "migration:generate": "yarn typeorm migration:generate -d src/database/data-source.ts src/database/migrations/ --name",
     "migration:run": "yarn typeorm migration:run -d src/database/data-source.ts",
-    "migration:revert": "yarn typeorm migration:revert -d src/database/data-source.ts"
+    "migration:revert": "yarn typeorm migration:revert -d src/database/data-source.ts",
+    "seed": "ts-node -r tsconfig-paths/register src/database/seeds/index.ts",
+    "seed:local": "NODE_ENV=local npm run seed",
+    "seed:prod": "NODE_ENV=production npm run seed"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
