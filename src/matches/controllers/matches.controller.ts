@@ -1,34 +1,50 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import {
-  CreateMatchRequestDto,
-  CreateMatchResponseDto,
-} from '../dtos/create-match.dto';
+  Controller,
+  Post,
+  Get,
+  Patch,
+  Delete,
+  Body,
+  Param,
+  Query,
+  HttpCode,
+  HttpStatus,
+} from '@nestjs/common';
 import { MatchesService } from '../services/matches.service';
+import { CreateMatchRequestDto } from '../dtos/create-match.dto';
+import { Match } from '../entities/match.entity';
+import { FilterMatchesDto } from '../dtos/filter-matches.dto';
 
 @Controller('matches')
 export class MatchesController {
   constructor(private readonly matchesService: MatchesService) {}
+
   @Post()
-  @ApiOperation({ summary: 'Create a new match' })
-  @ApiResponse({
-    status: 201,
-    type: CreateMatchResponseDto,
-  })
-  create(@Body() matchData: CreateMatchRequestDto) {
-    console.log('====================================');
-    console.log('MatchesController -> create -> matchData', matchData);
-    console.log('====================================');
-    return this.matchesService.create(matchData);
+  async create(@Body() dto: CreateMatchRequestDto): Promise<Match> {
+    return this.matchesService.create(dto);
+  }
+
+  @Patch(':id')
+  async update(
+    @Param('id') id: string,
+    @Body() dto: Partial<CreateMatchRequestDto>,
+  ): Promise<Match> {
+    return this.matchesService.update(id, dto);
+  }
+
+  @Get(':id')
+  async findById(@Param('id') id: string): Promise<Match | null> {
+    return this.matchesService.findById(id);
   }
 
   @Get()
-  @ApiOperation({ summary: 'Get all matches by teamId' })
-  @ApiResponse({
-    status: 200,
-    type: [CreateMatchResponseDto],
-  })
-  listByTeamId(teamId: string) {
-    return this.matchesService.listByTeamId(teamId);
+  async listFiltered(@Query() filters: FilterMatchesDto) {
+    return this.matchesService.list(filters);
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async delete(@Param('id') id: string): Promise<void> {
+    return this.matchesService.delete(id);
   }
 }

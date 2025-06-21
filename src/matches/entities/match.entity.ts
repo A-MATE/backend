@@ -1,14 +1,22 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
+} from 'typeorm';
+import { MatchStatus } from '../@types/match-status.enum';
 
 @Entity()
 export class Match {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ nullable: false })
+  @Column()
   teamId: string;
 
-  @Column({ nullable: false })
+  @Column()
   organizationId: string;
 
   @Column()
@@ -17,10 +25,10 @@ export class Match {
   @Column({ nullable: true })
   locationId: string;
 
-  @Column({ nullable: false })
+  @Column()
   homeTeamId: string;
 
-  @Column({ nullable: false })
+  @Column()
   awayTeamId: string;
 
   @Column({ nullable: true })
@@ -29,18 +37,22 @@ export class Match {
   @Column({ nullable: true })
   awayTeamScore: number;
 
-  @Column({ nullable: false })
-  status: string;
+  @Column({
+    type: 'enum',
+    enum: MatchStatus,
+    default: MatchStatus.SCHEDULED,
+  })
+  status: MatchStatus;
 
-  @Column({ nullable: false })
+  @Column()
   sport: string;
 
-  @Column({ nullable: false })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @Column({ nullable: true })
+  @UpdateDateColumn({ nullable: true })
   updatedAt: Date;
 
-  @Column({ nullable: true })
+  @DeleteDateColumn({ nullable: true })
   deletedAt: Date;
 }
