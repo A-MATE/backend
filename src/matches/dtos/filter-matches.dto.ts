@@ -1,0 +1,29 @@
+import { IsOptional, IsEnum, IsString, IsInt, Min } from 'class-validator';
+import { Type } from 'class-transformer';
+import { MatchStatus } from '../@types/match-status.enum';
+
+export class FilterMatchesDto {
+  @IsOptional()
+  @IsString()
+  organizationId?: string;
+
+  @IsOptional()
+  @IsString()
+  teamId?: string;
+
+  @IsOptional()
+  @IsEnum(MatchStatus)
+  status?: MatchStatus;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  page?: number = 1;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  limit?: number = 20;
+}

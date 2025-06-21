@@ -3,8 +3,9 @@ import { DataSourceOptions } from 'typeorm';
 import { Organization } from '../organizations/entities/organization.entity';
 import { Team } from '../teams/entities/team.entity';
 import { User } from '../users/entities/user.entity';
+import { Match } from 'src/matches/entities/match.entity';
 
-const entities = [Organization, Team, User];
+const entities = [Organization, Team, User, Match];
 
 export const getTypeOrmModuleOptions = (
   env: NodeJS.ProcessEnv,
