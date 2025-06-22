@@ -5,16 +5,25 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 import { MatchStatus } from '../@types/match-status.enum';
+import { Sports } from 'src/common/@types/sports.enum';
+import { Team } from 'src/teams/entities/team.entity';
 
 @Entity()
 export class Match {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
-  teamId: string;
+  @ManyToOne(() => Team)
+  @JoinColumn({ name: 'homeTeamId' })
+  homeTeam: Team;
+
+  @ManyToOne(() => Team)
+  @JoinColumn({ name: 'awayTeamId' })
+  awayTeam: Team;
 
   @Column()
   organizationId: string;
@@ -24,12 +33,6 @@ export class Match {
 
   @Column({ nullable: true })
   locationId: string;
-
-  @Column()
-  homeTeamId: string;
-
-  @Column()
-  awayTeamId: string;
 
   @Column({ nullable: true })
   homeTeamScore: number;
@@ -44,8 +47,12 @@ export class Match {
   })
   status: MatchStatus;
 
-  @Column()
-  sport: string;
+  @Column({
+    type: 'enum',
+    enum: Sports,
+    default: Sports.SOCCER,
+  })
+  sport: Sports;
 
   @CreateDateColumn()
   createdAt: Date;

@@ -1,10 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { MatchStatus } from '../@types/match-status.enum';
+import { Sports } from 'src/common/@types/sports.enum';
 
 export class CreateMatchRequestDto {
-  @ApiProperty()
-  teamId: string;
-
   @ApiProperty()
   organizationId: string;
 
@@ -17,11 +15,24 @@ export class CreateMatchRequestDto {
   @ApiProperty()
   date: Date;
 
-  @ApiProperty()
-  locationId: string;
+  @ApiProperty({ nullable: true })
+  locationId?: string;
 
-  @ApiProperty()
-  sport: string;
+  @ApiProperty({ enum: Sports })
+  sport: Sports;
+
+  @ApiProperty({
+    enum: MatchStatus,
+    default: MatchStatus.SCHEDULED,
+    required: false,
+  })
+  status?: MatchStatus;
+
+  @ApiProperty({ nullable: true, required: false })
+  homeTeamScore?: number;
+
+  @ApiProperty({ nullable: true, required: false })
+  awayTeamScore?: number;
 }
 
 export class CreateMatchResponseDto {
@@ -29,16 +40,13 @@ export class CreateMatchResponseDto {
   id: string;
 
   @ApiProperty()
-  locationId: string;
-
-  @ApiProperty()
   organizationId: string;
 
-  @ApiProperty()
-  sport: string;
+  @ApiProperty({ nullable: true })
+  locationId: string;
 
-  @ApiProperty()
-  teamId: string;
+  @ApiProperty({ enum: Sports })
+  sport: Sports;
 
   @ApiProperty()
   date: Date;
@@ -49,17 +57,17 @@ export class CreateMatchResponseDto {
   @ApiProperty()
   awayTeamId: string;
 
-  @ApiProperty()
+  @ApiProperty({ nullable: true })
   homeTeamScore: number;
 
-  @ApiProperty()
+  @ApiProperty({ nullable: true })
   awayTeamScore: number;
 
   @ApiProperty({
     enum: MatchStatus,
     description: 'The status of the match',
   })
-  status: string;
+  status: MatchStatus;
 
   @ApiProperty()
   createdAt: Date;
