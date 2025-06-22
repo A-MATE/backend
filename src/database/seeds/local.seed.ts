@@ -53,20 +53,20 @@ export async function seedLocal(dataSource: DataSource): Promise<void> {
 
   await dataSource.query(`
     INSERT INTO "match" (
-      id, "teamId", "organizationId", date, "homeTeamId", "awayTeamId",
+      id, "organizationId", date, "homeTeamId", "awayTeamId",
       "homeTeamScore", "awayTeamScore", status, sport, "createdAt"
     ) VALUES
       (
-        gen_random_uuid(), '${teamAId}', '${orgId}', NOW(),
-        '${teamAId}', '${teamBId}', 3, 1, 'FINISHED', 'football', NOW()
+        gen_random_uuid(), '${orgId}', NOW(),
+        '${teamAId}', '${teamBId}', 90, 85, 'FINISHED', 'basketball', NOW()
       ),
       (
-        gen_random_uuid(), '${teamAId}', '${orgId}', NOW(),
-        '${teamCId}', '${teamAId}', 2, 2, 'FINISHED', 'football', NOW()
+        gen_random_uuid(), '${orgId}', NOW(),
+        '${teamCId}', '${teamAId}', 78, 78, 'FINISHED', 'basketball', NOW()
       ),
       (
-        gen_random_uuid(), '${teamBId}', '${orgId}', NOW(),
-        '${teamBId}', '${teamCId}', NULL, NULL, 'SCHEDULED', 'football', NOW()
+        gen_random_uuid(), '${orgId}', NOW(),
+        '${teamBId}', '${teamCId}', NULL, NULL, 'SCHEDULED', 'basketball', NOW()
       )
     ON CONFLICT (id) DO NOTHING;
   `);
