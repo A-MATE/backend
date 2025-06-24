@@ -27,7 +27,7 @@ export class UpdateTeamRequestDto {
 
   @ApiProperty({
     description: 'Updated array of URLs for team logo',
-    example: ['http://example.com/logo1.png', 'http://example.com/logo2.png'],
+    example: { thumbnail: 'https://', large: 'https://' },
     required: false,
   })
   @IsOptional()

@@ -56,7 +56,7 @@ export class TeamsService {
     ageGroup: TeamAgeCategory,
     gender: TeamGender,
   ): Promise<CreateTeamResponseDto> {
-    const team = await this.teamsRepository.updateTeam(
+    await this.teamsRepository.updateTeam(
       teamId,
       name,
       description,
@@ -65,10 +65,15 @@ export class TeamsService {
       gender,
     );
 
-    return {
-      ...team,
-      organizationId: team.organization.id,
-    };
+    const updatedTeam = await this.teamsRepository.getTeamById(teamId);
+    if (!updatedTeam) {
+      throw new NotFoundException(`Team not found for team with ID ${teamId}`);
+    }
+
+    return plainToInstance(CreateTeamResponseDto, {
+      ...updatedTeam,
+      organizationId: updatedTeam.organization.id,
+    });
   }
 
   async getAllTeams(
