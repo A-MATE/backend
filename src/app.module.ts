@@ -15,6 +15,7 @@ import { TeamsModule } from './teams/teams.module';
 import { UsersModule } from './users/users.module';
 
 import { getTypeOrmModuleOptions } from './database/typeorm.config';
+import { UploadImageModule } from './upload-image/upload-image.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { getTypeOrmModuleOptions } from './database/typeorm.config';
     PlayersModule,
     MatchesModule,
     SponsorsModule,
+    UploadImageModule,
   ],
   controllers: [AppController],
   providers: [AppService],
