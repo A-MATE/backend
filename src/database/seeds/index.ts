@@ -16,7 +16,7 @@ async function runSeed() {
 
   const env = process.env.NODE_ENV;
 
-  if (env === 'local') {
+  if (env === 'local' || env === 'development') {
     await seedLocal(dataSource);
   } else if (env === 'production') {
     await seedProduction(dataSource);
